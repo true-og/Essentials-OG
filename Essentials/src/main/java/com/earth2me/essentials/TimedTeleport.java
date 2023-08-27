@@ -73,7 +73,7 @@ public class TimedTeleport implements Runnable {
             return;
         }
 
-        if (!timer_canMove && (Math.round(currLocation.getX() * MOVE_CONSTANT) != timer_initX || Math.round(currLocation.getY() * MOVE_CONSTANT) != timer_initY || Math.round(currLocation.getZ() * MOVE_CONSTANT) != timer_initZ || ess.getConfig().getBoolean("teleport-cancel-on-damage") && teleportUser.getBase().getHealth() < timer_health)) {
+        if (!timer_canMove && (Math.round(currLocation.getX() * MOVE_CONSTANT) != timer_initX || Math.round(currLocation.getY() * MOVE_CONSTANT) != timer_initY || Math.round(currLocation.getZ() * MOVE_CONSTANT) != timer_initZ || (ess.getConfig().getBoolean("teleport-cancel-on-damage") && teleportUser.getBase().getHealth() < timer_health))) {
             // user moved, cancelTimer teleportPlayer
             cancelTimer(true);
             return;
