@@ -89,12 +89,12 @@ public class AsyncTimedTeleport implements Runnable {
             cancelTimer(false);
             return;
         }
-
-        if (!timer_canMove && (Math.round(currLocation.getX() * MOVE_CONSTANT) != timer_initX || Math.round(currLocation.getY() * MOVE_CONSTANT) != timer_initY || Math.round(currLocation.getZ() * MOVE_CONSTANT) != timer_initZ || teleportUser.getBase().getHealth() < timer_health)) {
+        
+        if (!timer_canMove && (Math.round(currLocation.getX() * MOVE_CONSTANT) != timer_initX || Math.round(currLocation.getY() * MOVE_CONSTANT) != timer_initY || Math.round(currLocation.getZ() * MOVE_CONSTANT) != timer_initZ || (ess.getConfig().getBoolean("teleport-cancel-on-damage") && teleportUser.getBase().getHealth() < timer_health))) {
             // user moved, cancelTimer teleportPlayer
             cancelTimer(true);
             return;
-        }
+        }}
 
         class DelayedTeleportTask implements Runnable {
             @Override
