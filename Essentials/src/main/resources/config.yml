@@ -103,6 +103,9 @@ teleport-cooldown: 0
 # Whether to cancel a teleport when damage is taken
 teleport-cancel-on-damage: true
 
+# Whether to cancel a teleport when a player takes damage
+teleport-cancel-on-damage: false
+
 # The delay, in seconds, a player can't be attacked by other players after they have been teleported by a command.
 # This will also prevent the player attacking other players.
 teleport-invulnerability: 4

@@ -94,7 +94,7 @@ public class AsyncTimedTeleport implements Runnable {
             // user moved, cancelTimer teleportPlayer
             cancelTimer(true);
             return;
-        }}
+        }
 
         class DelayedTeleportTask implements Runnable {
             @Override
