@@ -29,10 +29,6 @@ public class UserTest extends TestCase {
         ess.getUser(base1);
     }
 
-    private void should(final String what) {
-        System.out.println(getName() + " should " + what);
-    }
-
     public void testUpdate() {
         final OfflinePlayerStub base1alt = server.createPlayer(base1.getName());
         assertEquals(base1alt, ess.getUser(base1alt).getBase());
@@ -57,7 +53,6 @@ public class UserTest extends TestCase {
     }
 
     public void testMoney() {
-        should("properly set, take, give, and get money");
         final User user = ess.getUser(base1);
         BigDecimal i = new BigDecimal("100.5");
         try {

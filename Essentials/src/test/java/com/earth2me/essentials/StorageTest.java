@@ -47,6 +47,5 @@ public class StorageTest {
         ext.mark("reloaded file");
         user.reloadConfig();
         ext.mark("reloaded file (cached)");
-        System.out.println(ext.end());
     }
 }

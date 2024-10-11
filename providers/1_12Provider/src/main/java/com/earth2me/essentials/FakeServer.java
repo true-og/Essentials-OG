@@ -682,13 +682,13 @@ public final class FakeServer implements Server {
         return new ConsoleCommandSender() {
             @Override
             public void sendMessage(final String message) {
-                System.out.println("Console message: " + message);
+                Logger.getLogger("Essentials").info("Console message: " + message);
             }
 
             @Override
             public void sendMessage(final String[] messages) {
                 for (final String message : messages) {
-                    System.out.println("Console message: " + message);
+                    Logger.getLogger("Essentials").info("Console message: " + message);
                 }
             }
 
