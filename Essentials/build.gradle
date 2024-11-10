@@ -34,6 +34,9 @@ test {
 }
 
 shadowJar {
+    archiveFileName = "Essentials-OG-${rootProject.ext.FULL_VERSION}.jar"
+    destinationDirectory = file("${rootProject.buildDir}/libs")
+    
     dependencies {
         include (dependency('io.papermc:paperlib'))
         include (dependency('org.bstats:bstats-bukkit'))
