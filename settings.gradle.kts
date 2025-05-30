@@ -33,10 +33,6 @@ rootProject.name = "EssentialsXParent"
 // Modules
 sequenceOf(
     "",
-    "AntiBuild",
-    "Chat",
-    "GeoIP",
-    "Protect",
     "Spawn",
     "XMPP",
 ).forEach {
