@@ -34,7 +34,6 @@ rootProject.name = "EssentialsXParent"
 sequenceOf(
     "",
     "Spawn",
-    "XMPP",
 ).forEach {
     include(":EssentialsX$it")
     project(":EssentialsX$it").projectDir = file("Essentials$it")
