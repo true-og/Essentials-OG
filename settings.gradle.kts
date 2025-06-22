@@ -1,5 +1,8 @@
 dependencyResolutionManagement {
     repositories {
+        mavenCentral()
+        gradlePluginPortal()
+		maven("https://repo.purpurmc.org/snapshots/")
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
         maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://jitpack.io") {

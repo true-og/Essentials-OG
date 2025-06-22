@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     id("essentials.module-conventions")
     id("com.github.johnrengelman.shadow")
@@ -8,10 +10,11 @@ tasks {
         archiveClassifier.set("unshaded")
     }
     shadowJar {
-        archiveClassifier.set(null)
+        archiveClassifier.set("") // Empty String, NOT null.
     }
 }
 
 extensions.configure<EssentialsModuleExtension> {
-    archiveFile.set(tasks.shadowJar.flatMap { it.archiveFile })
+    archiveFile.set(tasks.named<ShadowJar>("shadowJar").flatMap { it.archiveFile })
 }
+
