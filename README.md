@@ -15,4 +15,8 @@ Clone this repository, then run the following command:
 
 - Added option to stop cancelling teleports during damage events.
 
-- Removed log4j
+- Removed log4j.
+
+- Replaced EssentialsXSpawn with [Spawn-OG](https://github.com/true-og/Spawn-OG).
+
+- Removed all sub-projects.
