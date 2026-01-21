@@ -1,3 +1,109 @@
-[1] Be respectful
-[2] Be ethical
-[3] Use common sense
+&aTrue&cOG &eNetwork &6Official Rules:
+
+
+&4=-=-=-=-=-&cBanable Offenses:&4-=-=-=-=-=
+
+
+&cRule 1 - No Hateful Username Or Skins:
+&fDo not join TrueOG with a racial or ableist slur in your name. Inappropriate usernames will be banned on-sight. Once you change your username back to something less malicious, you may appeal your ban at https://true-og.net/appeals
+
+&cRule 2 - No Exploiting Glitches:
+&fDo not abuse your privileges, a bug or a glitch in order to gain an advantage over other players. This includes duping, lag machines, and block glitching. You may use the previously discovered season 1 map seed to find resources close to spawn, but no new seed hunting is allowed.
+
+&cRule 3 - Be Accountable:
+&fDon't fake evidence or evade punishments. Don't say things or post links in chat that could get you in trouble with law enforcement. Don't attempt to trick any player into believing that you are someone you are not. If you are caught breaking the rules, own up to it.
+
+&cRule 4 - No Doxxing:
+&fDo not reveal anyone's private personal information without their consent.
+
+&cRule 5 - No Character Automation or Boosting.
+&fDo not use baritone or any other mod that allows you to automate your character. TrueOG is open to sentient players only, not bots. Except our bots. Do not use alt accounts or friends to farm for gains in kills or other statistics.
+
+&cRule 6 - No Staff or Server Abuse:
+&fDon't attempt to DDOS the server or otherwise attack TrueOG's infrastructure. Don't maliciously insult or threaten staff. They are volunteers who are doing their best.
+
+&cRule 7 - Use the Community Marketplace Responsibly:
+&fShops are mainly intended for selling, not storage. If the market is full, and your shop consists largely of non-sale blocks, you may be asked to change or remove your shop by a staff member. Here is an example of what not to do: https://true-og.net/bad-shop.png
+
+
+&5=-=-=-=-=-&dMutable Offenses:&5-=-=-=-=-=
+
+
+&dRule 8 - No Targeted Harassment or Bigotry:
+&fTrueOG is not an anarchy server. While we are tolerant of swearing and trash talk, repeated and targeted hate speech against an individual is unacceptable and will result in a mute.
+
+&dRule 9 - No IRL Death Threats:
+&fDo not wish death or physical harm upon another individual. If you are threatening to kill somebody in game, phrase it unambiguously, for example "I am going to kill you in Minecraft".
+
+&dRule 10 - No Spamming:
+&fDo not use excessive spam or caps in chat or you will be kicked. Repeated offenses will result in a mute. Bot spam is not allowed. You may only advertise your own pages or servers, and only once every 30 minutes.
+
+&dRule 11 - No Explicit Sexual Topics:
+&fDo not discuss sexual topics or post pornography on the server. There are kids here. NSFW memes should be kept to #fun-kat, not posted in game.
+
+&dRule 12 - No Phishing or Scamming:
+&fDon't attempt to trick other members into revealing credentials. Posting malicious links will result in a permanent mute.
+
+
+&9=-=-=-=-=-&3Discord Rules:&9-=-=-=-=-=
+
+
+&3Rule 13 - Keep Voice Chat Legible:
+&fDo not use extreme voice changers, loud noises, or music to intentionally annoy other players.
+
+
+&3Rule 14 - Follow Discord's Terms of Service:
+&fWe require all members to follow Discord's Terms of Service (TOS), which you can read here: https://discord.com/terms
+
+
+&2=-=-=-=-=-&aAllowed Mods/Clients:&2-=-=-=-=-=
+
+
+&a- 1.7 Animations Mods
+&a- 5zig
+&a- Badlion Client
+&a- Better Sprinting Mod (including shift toggle)
+&a- Bobby Mod
+&a- Cosmic Client
+&a- CPS HUDs
+&a- Direction HUDs
+&a- Fabric
+&a- Forge
+&a- Fullbright
+&a- FPS HUDs
+&a- Gammabright
+&a- Hyperium Client
+&a- Feather Client
+&a- InGameInfoXML
+&a- LabyMod
+&a- LiteLoader
+&a- Lunar Client
+&a- Macro Mod (excluding autoclick)
+&a- Minimap with entities
+&a- Optifine
+&a- PvPLounge Client
+&a- Shaders
+&a- Shulker Preview
+&a- Sodium
+&a- Status Effect HUDs
+&a- TabbyChat
+&a- Ugly Scoreboard Fix
+&a- Waila Mod (with health indicators disabled)
+
+
+&4=-=-=-=-=-&cBanned Mods/Clients:&4-=-=-=-=-=
+
+
+&c- Baritone
+&c- Freecam
+&c- Geyser Standalone
+&c- HACKED CLIENTS (including ghost clients)
+&c- MoreCulling
+&c- OQMineBot
+&c- Player/Mob Indicators (Health/Armor/Inventory/etc.)
+&c- Replay Mods
+&c- Schematica
+&c- X-Ray Mods/Packs
+
+
+&6See something missing from this list? Please ask a &lModerator &6if you are unsure about a specific mod.

@@ -24,7 +24,7 @@
 
 # A color code between 0-9 or a-f. Set to 'none' to disable.
 # In 1.16+ you can use hex color codes here as well. (For example, #613e1d is brown).
-ops-name-color: '4'
+ops-name-color: 'none'
 
 # The character(s) to prefix all nicknames, so that you know they are not true usernames.
 # Users with essentials.nick.hideprefix will not be prefixed with the character(s)
@@ -41,37 +41,37 @@ nick-blacklist:
 
 # When this option is enabled, nickname length checking will exclude color codes in player names.
 # ie: "&6Notch" has 7 characters (2 are part of a color code), a length of 5 is used when this option is set to true
-ignore-colors-in-max-nick-length: false
+ignore-colors-in-max-nick-length: true
 
 # When this option is enabled, display names for hidden users will not be shown. This prevents players from being
 # able to see that they are online while vanished.
 hide-displayname-in-vanish: true
 
 # Disable this if you have any other plugin, that modifies the displayname of a user.
-change-displayname: true
+change-displayname: false
 
 # This option will cause Essentials to show players' displaynames instead of usernames when tab completing Essentials commands.
-change-tab-complete-name: false
+change-tab-complete-name: true
 
 # When this option is enabled, the (tab) player list will be updated with the displayname.
 # The value of change-displayname (above) has to be true.
-#change-playerlist: true
+change-playerlist: false
 
 # When EssentialsChat.jar isn't used, force essentials to add the prefix and suffix from permission plugins to displayname.
 # This setting is ignored if EssentialsChat.jar is used, and defaults to 'true'.
 # The value of change-displayname (above) has to be true.
 # Do not edit this setting unless you know what you are doing!
-#add-prefix-suffix: false
+add-prefix-suffix: false
 
 # When this option is enabled, player prefixes will be shown in the playerlist.
 # This feature only works for Minecraft version 1.8 and higher.
 # This value of change-playerlist has to be true
-#add-prefix-in-playerlist: true
+add-prefix-in-playerlist: false
 
 # When this option is enabled, player suffixes will be shown in the playerlist.
-# This feature only works for Minecraft version 1.8 and higher. 
+# This feature only works for Minecraft version 1.8 and higher.
 # This value of change-playerlist has to be true
-#add-suffix-in-playerlist: true
+add-suffix-in-playerlist: false
 
 # If the teleport destination is unsafe, should players be teleported to the nearest safe location?
 # If this is set to true, Essentials will attempt to teleport players close to the intended destination.
@@ -84,7 +84,7 @@ force-disable-teleport-safety: false
 
 # If a player is teleporting to an unsafe location in creative, adventure, or god mode; they will not be teleported to a
 # safe location. If you'd like players to be teleported to a safe location all of the time, set this option to true.
-force-safe-teleport-location: false
+force-safe-teleport-location: true
 
 # If a player has any passengers, the teleport will fail. Should their passengers be dismounted before they are teleported?
 # If this is set to true, Essentials will dismount the player's passengers before teleporting.
@@ -92,31 +92,31 @@ force-safe-teleport-location: false
 teleport-passenger-dismount: true
 
 # The delay, in seconds, required between /home, /tp, etc.
-teleport-cooldown: 0
+teleport-cooldown: 6
 
 # The delay, in seconds, before a user actually teleports. If the user moves or gets attacked in this timeframe, the teleport is cancelled.
-teleport-delay: 0
+teleport-delay: 3
 
 # Whether to cancel a teleport when damage is taken
-teleport-cancel-on-damage: true
+teleport-cancel-on-damage: false
 
 # The delay, in seconds, a player can't be attacked by other players after they have been teleported by a command.
 # This will also prevent the player attacking other players.
-teleport-invulnerability: 4
+teleport-invulnerability: 2
 
 # Whether to make all teleportations go to the center of the block; where the x and z coordinates decimal become .5
 teleport-to-center: true
 
 # The delay, in seconds, required between /heal or /feed attempts.
-heal-cooldown: 60
+heal-cooldown: 2
 
 # Do you want to remove potion effects when healing a player?
-remove-effects-on-heal: true
+remove-effects-on-heal: false
 
 # Near Radius
 # The default radius with /near
 # Used to use chat radius but we are going to make it separate.
-near-radius: 200
+near-radius: 500
 
 # What to prevent from /item and /give.
 # e.g item-spawn-blacklist: 10,11,46
@@ -140,17 +140,17 @@ item-spawn-blacklist:
 permission-based-item-spawn: false
 
 # Mob limit on the /spawnmob command per execution.
-spawnmob-limit: 10
+spawnmob-limit: 20
 
 # Shall we notify users when using /lightning?
-warn-on-smite: true
+warn-on-smite: false
 
 # Shall we drop items instead of adding to inventory if the target inventory is full?
 drop-items-if-full: false
 
 # Essentials Mail Notification
 # Should we notify players if they have no new mail?
-notify-no-new-mail: true
+notify-no-new-mail: false
 
 # Specifies the duration (in seconds) between each time a player is notified of mail they have.
 # Useful for servers with a lot of mail traffic.
@@ -186,27 +186,27 @@ verbose-command-usages: true
 # remove commands that are used for something you dont want to spy on.
 # Set - '*' in order to listen on all possible commands.
 socialspy-commands:
-  - msg
-  - w
-  - r
-  - mail
-  - m
-  - t
-  - whisper
-  - emsg
-  - tell
-  - er
-  - reply
-  - ereply
-  - email
-  - action
-  - describe
-  - eme
-  - eaction
-  - edescribe
-  - etell
-  - ewhisper
-  - pm
+#  - msg
+#  - w
+#  - r
+#  - mail
+#  - m
+#  - t
+#  - whisper
+#  - emsg
+#  - tell
+#  - er
+#  - reply
+#  - ereply
+#  - email
+#  - action
+#  - describe
+#  - eme
+#  - eaction
+#  - edescribe
+#  - etell
+#  - ewhisper
+#  - pm
 
 # Whether the private and public messages from muted players should appear in the social spy.
 # If so, they will be differentiated from those sent by normal players.
@@ -214,7 +214,7 @@ socialspy-listen-muted-players: true
 
 # Whether social spy should spy on private messages or just the commands from the list above.
 # If false, social spy will only monitor commands from the list above.
-socialspy-messages: true
+socialspy-messages: false
 
 # The following settings listen for when a player changes worlds.
 # If you use another plugin to control speed and flight, you should change these to false.
@@ -234,9 +234,8 @@ world-change-speed-reset: true
 # Essentials already disabled Essentials messaging commands by default.
 # It only cares about the root command, not args after that (it sees /f chat the same as /f)
 mute-commands:
-  - f
-  - kittycannon
- # - '*'
+  - shout
+  - near
 
 # If you do not wish to use a permission system, you can define a list of 'player perms' below.
 # This list has no effect if you are using a supported permissions system.
@@ -335,10 +334,10 @@ use-bukkit-permissions: true
 
 # When this option is enabled, one-time use kits (ie. delay < 0) will be
 # removed from the /kit list when a player can no longer use it
-skip-used-one-time-kits-from-kit-list: false
+skip-used-one-time-kits-from-kit-list: true
 
 # When enabled, armor from kits will automatically be equipped as long as the player's armor slots are empty.
-kit-auto-equip: false
+kit-auto-equip: true
 
 # Determines the functionality of the /createkit command.
 # If this is true, /createkit will give the user a link with the kit code.
@@ -353,7 +352,7 @@ pastebin-createkit: false
 # WARNING: When creating kits via /createkit with this option enabled, you will not be able to downgrade your server with these kit items.
 # This option only affects /createkit - you can still create kits by hand in `kits.yml` using Essentials' human-readable item format.
 # Default is false.
-use-nbt-serialization-in-createkit: false
+use-nbt-serialization-in-createkit: true
 
 # Essentials Sign Control
 # See http://wiki.ess3.net/wiki/Sign_Tutorial for instructions on how to use these.
@@ -362,7 +361,7 @@ use-nbt-serialization-in-createkit: false
 # Color is not an actual sign, it's for enabling using color codes on signs, when the correct permissions are given.
 
 enabledSigns:
-  #- color
+  - color
   #- balance
   #- buy
   #- sell
@@ -377,8 +376,8 @@ enabledSigns:
   #- info
   #- spawnmob
   #- repair
-  #- time
-  #- weather
+  - time
+  - weather
   #- anvil
   #- cartography
   #- disposal
@@ -395,7 +394,7 @@ sign-use-per-second: 4
 # Allow item IDs on pre-existing signs on 1.13 and above.
 # You cannot use item IDs on new signs, but this will allow players to interact with signs that
 # were placed before 1.13.
-allow-old-id-signs: false
+allow-old-id-signs: true
 
 # List of sign names Essentials should not protect. This feature is especially useful when
 # another plugin provides a sign that EssentialsX provides, but Essentials overrides.
@@ -428,12 +427,12 @@ per-warp-permission: false
 # Detailed instructions and examples can be found on the wiki: http://wiki.ess3.net/wiki/List
 list:
     # To merge groups, list the groups you wish to merge
-    #Staff: owner admin moderator
-    Admins: owner admin
+    Staff: admin moderator builder developer
+    Admins: admin
     # To limit groups, set a max user limit
     #builder: 20
     # To hide groups, set the group as hidden
-    #default: hidden
+    default: youtube tester og-master og-pro og member
     # Uncomment the line below to simply list all players with no grouping
     #Players: '*'
 
@@ -448,7 +447,7 @@ debug: false
 # For example, to set language to English, set locale to en, to use the file "messages_en.properties".
 # Don't forget to remove the # in front of the line.
 # For more information, visit http://wiki.ess3.net/wiki/Locale
-#locale: en
+locale: en
 
 # Turn off god mode when people leave the server.
 remove-god-on-disconnect: false
@@ -457,7 +456,7 @@ remove-god-on-disconnect: false
 # After this timeout in seconds, the user will be set as AFK.
 # This feature requires the player to have essentials.afk.auto node.
 # Set to -1 for no timeout.
-auto-afk: 300
+auto-afk: -1
 
 # Auto-AFK Kick
 # After this timeout in seconds, the user will be kicked from the server.
@@ -497,7 +496,7 @@ sleep-ignores-afk-players: true
 # Users with the permission node essentials.sleepingignored will always be ignored.
 sleep-ignores-vanished-player: true
 
-# Set the player's list name when they are AFK. This is none by default which specifies that Essentials 
+# Set the player's list name when they are AFK. This is none by default which specifies that Essentials
 # should not interfere with the AFK player's list name.
 # You may use color codes, use {USERNAME} the player's name or {PLAYER} for the player's displayname.
 afk-list-name: "none"
@@ -505,7 +504,7 @@ afk-list-name: "none"
 # When a player enters or exits AFK mode, should the AFK notification be broadcast
 # to the entire server, or just to the player?
 # When this setting is false, only the player will be notified upon changing their AFK state.
-broadcast-afk-message: true
+broadcast-afk-message: false
 
 # You can disable the death messages of Minecraft here.
 death-messages: true
@@ -514,13 +513,13 @@ death-messages: true
 # curse of vanishing when they die?
 # You can set this to "keep" (to keep the item), "drop" (to drop the item), or "delete" (to delete the item).
 # Defaults to "keep"
-vanishing-items-policy: keep
+vanishing-items-policy: delete
 
 # How should essentials handle players with the essentials.keepinv permission who have items with
 # curse of binding when they die?
 # You can set this to "keep" (to keep the item), "drop" (to drop the item), or "delete" (to delete the item).
 # Defaults to "keep"
-binding-items-policy: keep
+binding-items-policy: delete
 
 # When players die, should they receive the coordinates they died at?
 send-info-after-death: false
@@ -528,21 +527,21 @@ send-info-after-death: false
 # Should players with permissions be able to join and part silently?
 # You can control this with essentials.silentjoin and essentials.silentquit permissions if it is enabled.
 # In addition, people with essentials.silentjoin.vanish will be vanished on join.
-allow-silent-join-quit: false
+allow-silent-join-quit: true
 
 # You can set custom join and quit messages here. Set this to "none" to use the default Minecraft message,
 # or set this to "" to hide the message entirely.
 
 # Available placeholders:
-# {PLAYER} - The player's displayname. 
+# {PLAYER} - The player's displayname.
 # {USERNAME} - The player's username.
 # {PREFIX} - The player's prefix.
 # {SUFFIX} - The player's suffix.
 # {ONLINE} - The number of players online.
 # {UNIQUE} - The number of unique players to join the server.
 # {UPTIME} - The amount of time the server has been online.
-custom-join-message: "none"
-custom-quit-message: "none"
+custom-join-message: ""
+custom-quit-message: ""
 
 # You can set a custom join message for users who join with a new username here.
 # This message will only be used if a user has joined before and have since changed their username.
@@ -550,7 +549,7 @@ custom-quit-message: "none"
 # Set this to "none" to use the the "custom-join-message" above for every join.
 
 # Available placeholders:
-# {PLAYER} - The player's displayname. 
+# {PLAYER} - The player's displayname.
 # {USERNAME} - The player's username.
 # {OLDUSERNAME} - The player's old username.
 # {PREFIX} - The player's prefix.
@@ -571,7 +570,9 @@ hide-join-quit-messages-above: -1
 
 # Add worlds to this list, if you want to automatically disable god mode there.
 no-god-in-worlds:
-#  - world_nether
+  - world
+  - world_nether
+  - world_the_end
 
 # Set to true to enable per-world permissions for teleporting between worlds with essentials commands.
 # This applies to /world, /back, /tp[a|o][here|all], but not warps.
@@ -603,13 +604,13 @@ tree-command-range-limit: 300
 
 #Do you want Essentials to keep track of previous location for /back in the teleport listener?
 #If you set this to true any plugin that uses teleport will have the previous location registered.
-register-back-in-listener: false
+register-back-in-listener: true
 
 #Delay to wait before people can cause attack damage after logging in.
 login-attack-delay: 5
 
 #Set the max fly speed, values range from 0.1 to 1.0
-max-fly-speed: 0.8
+max-fly-speed: 1.0
 
 #Set the max walk speed, values range from 0.1 to 1.0
 max-walk-speed: 0.8
@@ -634,7 +635,7 @@ last-message-reply-recipient: true
 # this specifies the duration, in seconds, that would need to elapse for the
 # reply-recipient to update when receiving a message.
 # Default is 180 (3 minutes)
-last-message-reply-recipient-timeout: 180
+last-message-reply-recipient-timeout: 90
 
 # Changes the default /reply functionality.
 # If true, /reply will not check if the person you're replying to has vanished.
@@ -642,10 +643,10 @@ last-message-reply-recipient-timeout: 180
 last-message-reply-vanished: false
 
 # Toggles whether or not left clicking mobs with a milk bucket turns them into a baby.
-milk-bucket-easter-egg: true
+milk-bucket-easter-egg: false
 
 # Toggles whether or not the fly status message should be sent to players on join
-send-fly-enable-on-join: true
+send-fly-enable-on-join: false
 
 # Set to true to enable per-world permissions for setting time for individual worlds with essentials commands.
 # This applies to /time, /day, /eday, /night, /enight, /etime.
@@ -685,7 +686,7 @@ allow-selling-named-items: false
 # Delay for the MOTD display for players on join, in milliseconds.
 # This has no effect if the MOTD command or permission are disabled.
 # This can also be set to -1 to completely disable the join MOTD all together.
-delay-motd: 0
+delay-motd: -1
 
 # A list of commands that should have their complementary confirm commands enabled by default.
 # This is empty by default, for the latest list of valid commands see the latest source config.yml.
@@ -704,12 +705,12 @@ jail-online-time: false
 
 # Set the timeout, in seconds for players to accept a tpa before the request is cancelled.
 # Set to 0 for no timeout.
-tpa-accept-cancellation: 120
+tpa-accept-cancellation: 60
 
 # The maximum number of simultaneous tpa requests that can be pending for any player.
 # Once past this threshold, old requests will instantly time out.
 # Defaults to 5.
-tpa-max-requests: 5
+tpa-max-requests: 10
 
 # Allow players to set hats by clicking on their helmet slot.
 allow-direct-hat: true
@@ -737,12 +738,12 @@ max-projectile-speed: 8
 
 # Set the maximum amount of lore lines a user can set with the /itemlore command.
 # Users with the essentials.itemlore.bypass permission will be able to bypass this limit.
-max-itemlore-lines: 10
+max-itemlore-lines: 8
 
 # Should EssentialsX check for updates?
 # If set to true, EssentialsX will show notifications when a new version is available.
 # This uses the public GitHub API and no identifying information is sent or stored.
-update-check: true
+update-check: false
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -767,9 +768,10 @@ world-home-permissions: false
 # Create the 'home-rank' below, and give the matching permission: essentials.sethome.multiple.<home-rank>
 # For more information, visit http://wiki.ess3.net/wiki/Multihome
 sethome-multiple:
-  default: 3
-  vip: 5
-  staff: 10
+  member: 2
+  og: 3
+  og-pro: 4
+  highest: 6
 
 # In this example someone with 'essentials.sethome.multiple' and 'essentials.sethome.multiple.vip' will have 5 homes.
 # Remember, they MUST have both permission nodes in order to be able to set multiple homes.
@@ -779,14 +781,14 @@ sethome-multiple:
 #
 # Leaving this as false will retain Essentials' original behaviour, which is to always
 # change the compass' direction to point towards their first home.
-compass-towards-home-perm: false
+compass-towards-home-perm: true
 
 # If no home is set, would you like to send the player to spawn?
 # If set to false, players will not be teleported when they run /home without setting a home first.
-spawn-if-no-home: true
+spawn-if-no-home: false
 
 # Should players be asked to provide confirmation for homes which they attempt to overwrite?
-confirm-home-overwrite: false
+confirm-home-overwrite: true
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -810,9 +812,9 @@ command-costs:
   #kit-tools: 1500
 
 # Set this to a currency symbol you want to use.
-# Remember, if you want to use special characters in this document, 
+# Remember, if you want to use special characters in this document,
 # such as accented letters, you MUST save the file as UTF-8, not ANSI.
-currency-symbol: '$'
+currency-symbol: 'Diamonds: '
 
 # Enable this to make the currency symbol appear at the end of the amount rather than at the start.
 # For example, the euro symbol typically appears after the current amount.
@@ -820,11 +822,11 @@ currency-symbol-suffix: false
 
 # Set the maximum amount of money a player can have.
 # The amount is always limited to 10 trillion because of the limitations of a java double.
-max-money: 10000000000000
+max-money: 0
 
 # Set the minimum amount of money a player can have (must be above the negative of max-money).
 # Setting this to 0, will disable overdrafts/loans completely.  Users need 'essentials.eco.loan' perm to go below 0.
-min-money: -10000
+min-money: 0
 
 # Enable this to log all interactions with trade/buy/sell signs and sell command.
 economy-log-enabled: false
@@ -834,10 +836,10 @@ economy-log-enabled: false
 economy-log-update-enabled: false
 
 # Minimum acceptable amount to be used in /pay.
-minimum-pay-amount: 0.001
+minimum-pay-amount: 0
 
 # Enable this to block users who try to /pay another user which ignore them.
-pay-excludes-ignore-list: false
+pay-excludes-ignore-list: true
 
 # Whether or not users with a balance less than or equal to $0 should be shown in balance-top.
 # Setting to false will not show people with balances <= 0 in balance-top.
@@ -847,7 +849,7 @@ show-zero-baltop: true
 # The format of currency, excluding symbols. See currency-symbol-format-locale for symbol configuration.
 #
 # "#,##0.00" is how the majority of countries display currency.
-#currency-format: "#,##0.00"
+currency-format: "#,##0.00"
 
 # Format currency symbols. Some locales use , and . interchangeably.
 # Some formats do not display properly in-game due to faulty Minecraft font rendering.
@@ -855,7 +857,7 @@ show-zero-baltop: true
 # For 1.234,50 use de-DE
 # For 1,234.50 use en-US
 # For 1'234,50 use fr-ch
-#currency-symbol-format-locale: en-US
+currency-symbol-format-locale: en-US
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -920,7 +922,7 @@ chat:
 
   # If you are using group formats make sure to remove the '#' to allow the setting to be read.
   # Note: Group names are case-sensitive so you must match them up with your permission plugin.
-  
+
   # You can use permissions to control whether players can use formatting codes in their chat messages.
   # See https://essentialsx.net/wiki/Color-Permissions.html for more information.
 
@@ -929,6 +931,9 @@ chat:
   world-aliases:
   #  plots: "&dP&r"
   #  creative: "&eC&r"
+    world: "Overworld"
+    world_nether: "Nether"
+    world_the_end: "End"
 
   # Whether players should be placed into shout mode by default.
   shout-default: false
@@ -937,7 +942,7 @@ chat:
   persist-shout: false
 
   # Whether chat questions should be enabled or not.
-  question-enabled: true
+  question-enabled: false
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -981,7 +986,7 @@ protect:
     creeper-itemdamage: false
     creeper-blockdamage: false
     ender-crystal-explosion: false
-    enderdragon-blockdamage: true
+    enderdragon-blockdamage: false
     enderman-pickup: false
     villager-death: false
     bed-explosion: false
@@ -1146,17 +1151,15 @@ newbies:
   # Should we announce to the server when someone logs in for the first time?
   # If so, use this format, replacing {DISPLAYNAME} with the player name.
   # If not, set to ''
-  #announce-format: ''
-  announce-format: '&dWelcome {DISPLAYNAME}&d to the server!'
+  announce-format: ''
 
   # When we spawn for the first time, which spawnpoint do we use?
   # Set to "none" if you want to use the spawn point of the world.
-  spawnpoint: newbies
+  spawnpoint: default
 
   # Do we want to give users anything on first join? Set to '' to disable
   # This kit will be given regardless of cost and permissions, and will not trigger the kit delay.
-  #kit: ''
-  kit: tools
+  kit: ''
 
 # What priority should we use for handling respawns?
 # Set this to none, if you want vanilla respawning behaviour.
@@ -1164,29 +1167,29 @@ newbies:
 # Set this to high, if you want EssentialsSpawn to handle the respawning.
 # Set this to highest, if you want to force EssentialsSpawn to handle the respawning.
 # Note: Changes will not apply until after the server is restarted.
-respawn-listener-priority: high
+respawn-listener-priority: lowest
 
 # What priority should we use for handling spawning on joining the server?
 # See respawn-listener-priority for possible values.
 # Note: Changing this may impact or break spawn-on-join functionality.
 # Note: Changes will not apply until after the server is restarted.
-spawn-join-listener-priority: high
+spawn-join-listener-priority: lowest
 
 # When users die, should they respawn at their first home or bed, instead of the spawnpoint?
-respawn-at-home: false
+respawn-at-home: true
 
 # When users die, should they respawn at their bed instead of the spawnpoint?
 # The value of respawn-at-home (above) has to be true.
 respawn-at-home-bed: true
 
 # When users die, should EssentialsSpawn respect users' respawn anchors?
-respawn-at-anchor: false
+respawn-at-anchor: true
 
 # Teleport all joining players to the spawnpoint
 spawn-on-join: false
 # The following value of `guests` states that all players in group `guests` will be teleported to spawn when joining.
 #spawn-on-join: guests
-# The following list value states that all players in group `guests` and `admin` are to be teleported to spawn when joining. 
+# The following list value states that all players in group `guests` and `admin` are to be teleported to spawn when joining.
 #spawn-on-join:
 #- guests
 #- admin
