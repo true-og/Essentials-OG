@@ -27,7 +27,7 @@ pluginManagement {
     repositories { gradlePluginPortal() }
     plugins {
         id("com.diffplug.spotless") version "7.0.4"
-        id("com.gradleup.shadow") version "8.3.6"
+        id("com.gradleup.shadow") version "8.3.9"
     }
     includeBuild("build-logic")
 }
