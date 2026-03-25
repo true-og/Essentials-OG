@@ -315,7 +315,7 @@ public class Commandessentials extends EssentialsCommand {
             }
             pluginData.add("authors", authors);
 
-            if (name.startsWith("Essentials") && !name.equals("Essentials")) {
+            if (name.startsWith("Essentials") && !name.equals(ess.getDescription().getName())) {
                 addons.add(pluginData);
             }
             plugins.add(pluginData);
@@ -727,7 +727,8 @@ public class Commandessentials extends EssentialsCommand {
         boolean isUnsupported = false;
         final VersionUtil.SupportStatus supportStatus = VersionUtil.getServerSupportStatus();
         final PluginManager pm = server.getPluginManager();
-        final String essVer = pm.getPlugin("Essentials").getDescription().getVersion();
+        final Plugin essPlugin = pm.getPlugin(ess.getDescription().getName());
+        final String essVer = essPlugin == null ? ess.getDescription().getVersion() : essPlugin.getDescription().getVersion();
 
         final String serverMessageKey;
         if (supportStatus.isSupported()) {
@@ -740,16 +741,16 @@ public class Commandessentials extends EssentialsCommand {
 
         sender.sendMessage(tl(serverMessageKey, "Server", server.getBukkitVersion() + " " + server.getVersion()));
         sender.sendMessage(tl(serverMessageKey, "Brand", server.getName()));
-        sender.sendMessage(tl("versionOutputFine", "EssentialsX", essVer));
+        sender.sendMessage(tl("versionOutputFine", ess.getDescription().getName(), essVer));
 
         for (final Plugin plugin : pm.getPlugins()) {
             final PluginDescriptionFile desc = plugin.getDescription();
             String name = desc.getName();
             final String version = desc.getVersion();
 
-            if (name.startsWith("Essentials") && !name.equalsIgnoreCase("Essentials")) {
+            if (name.startsWith("Essentials") && !name.equalsIgnoreCase(ess.getDescription().getName())) {
                 if (officialPlugins.contains(name)) {
-                    name = name.replace("Essentials", "EssentialsX");
+                    name = name.replace("Essentials", ess.getDescription().getName());
 
                     if (!version.equalsIgnoreCase(essVer)) {
                         isMismatched = true;
