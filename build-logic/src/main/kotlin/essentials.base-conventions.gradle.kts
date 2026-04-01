@@ -32,6 +32,16 @@ afterEvaluate {
 }
 
 tasks {
+    processResources {
+        filteringCharset = Charsets.UTF_8.name()
+        val tokens = mapOf(
+            "full.version" to rootProject.ext["FULL_VERSION"] as String,
+            "git.branch" to "main"
+        )
+        filesMatching(listOf("plugin.yml", "config.yml", "release")) {
+            filter<ReplaceTokens>("tokens" to tokens)
+        }
+    }
     compileJava {
         options.compilerArgs.add("-Xlint:-deprecation")
     }
