@@ -76,7 +76,6 @@ public final class Potions {
         POTIONS.put("invisibility", PotionEffectType.INVISIBILITY);
         ALIASPOTIONS.put("invisible", PotionEffectType.INVISIBILITY);
         ALIASPOTIONS.put("invis", PotionEffectType.INVISIBILITY);
-        ALIASPOTIONS.put("vanish", PotionEffectType.INVISIBILITY);
         ALIASPOTIONS.put("disappear", PotionEffectType.INVISIBILITY);
 
         POTIONS.put("blindness", PotionEffectType.BLINDNESS);

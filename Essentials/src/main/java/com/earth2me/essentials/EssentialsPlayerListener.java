@@ -137,10 +137,6 @@ public class EssentialsPlayerListener implements Listener, FakeAccessor {
             ess.getServer().getPluginManager().registerEvents(new ArrowPickupListener(), ess);
         }
 
-        if (isGameEventEvent()) {
-            ess.getServer().getPluginManager().registerEvents(new SculkListener1_17(), ess);
-        }
-
         if (isEntityPickupEvent()) {
             ess.getServer().getPluginManager().registerEvents(new PickupListener1_12(), ess);
         } else {
@@ -282,10 +278,6 @@ public class EssentialsPlayerListener implements Listener, FakeAccessor {
         if (ess.getSettings().removeGodOnDisconnect() && user.isGodModeEnabled()) {
             user.setGodModeEnabled(false);
         }
-        if (user.isVanished()) {
-            user.setLeavingHidden(true);
-            user.setVanished(false);
-        }
         user.setLogoutLocation();
         if (user.isRecipeSee()) {
             user.getBase().getOpenInventory().getTopInventory().clear();
@@ -359,32 +351,16 @@ public class EssentialsPlayerListener implements Listener, FakeAccessor {
                 user.setLastLogin(currentTime);
                 user.setDisplayNick();
                 updateCompass(user);
-                user.setLeavingHidden(false);
 
                 // Check for new username. If they don't want the message, let's just say it's false.
                 final boolean newUsername = ess.getSettings().isCustomNewUsernameMessage() && lastAccountName != null && !lastAccountName.equals(user.getBase().getName());
-
-                if (!ess.getVanishedPlayersNew().isEmpty() && !user.isAuthorized("essentials.vanish.see")) {
-                    for (final String p : ess.getVanishedPlayersNew()) {
-                        final Player toVanish = ess.getServer().getPlayerExact(p);
-                        if (toVanish != null && toVanish.isOnline()) {
-                            user.getBase().hidePlayer(toVanish);
-                            if (ess.getSettings().isDebug()) {
-                                ess.getLogger().info("Hiding vanished player: " + p);
-                            }
-                        }
-                    }
-                }
 
                 if (user.isAuthorized("essentials.sleepingignored")) {
                     user.getBase().setSleepingIgnored(true);
                 }
 
                 final String effectiveMessage;
-                if (ess.getSettings().allowSilentJoinQuit() && (user.isAuthorized("essentials.silentjoin") || user.isAuthorized("essentials.silentjoin.vanish"))) {
-                    if (user.isAuthorized("essentials.silentjoin.vanish")) {
-                        user.setVanished(true);
-                    }
+                if (ess.getSettings().allowSilentJoinQuit() && user.isAuthorized("essentials.silentjoin")) {
                     effectiveMessage = null;
                 } else if (message == null || hideJoinQuitMessages()) {
                     effectiveMessage = null;
@@ -663,8 +639,6 @@ public class EssentialsPlayerListener implements Listener, FakeAccessor {
             switch (pluginCommand.getName()) {
                 case "afk":
                     update = false;
-                    // fall through
-                case "vanish":
                     broadcast = false;
                     break;
             }
@@ -764,9 +738,6 @@ public class EssentialsPlayerListener implements Listener, FakeAccessor {
 
         if (!user.getWorld().getName().equals(newWorld)) {
             user.sendMessage(tl("currentWorld", newWorld));
-        }
-        if (user.isVanished()) {
-            user.setVanished(user.isAuthorized("essentials.vanish"));
         }
     }
 
@@ -1010,15 +981,6 @@ public class EssentialsPlayerListener implements Listener, FakeAccessor {
                 if (ess.getUser((Player) event.getEntity()).isAfk()) {
                     event.setCancelled(true);
                 }
-            }
-        }
-    }
-
-    private final class SculkListener1_17 implements Listener {
-        @EventHandler
-        public void onGameEvent(final org.bukkit.event.block.BlockReceiveGameEvent event) {
-            if (event.getEntity() instanceof Player && ess.getUser((Player) event.getEntity()).isVanished()) {
-                event.setCancelled(true);
             }
         }
     }

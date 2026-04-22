@@ -22,7 +22,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
@@ -88,10 +87,6 @@ public class EssentialsEntityListener implements Listener {
             event.setCancelled(true);
         }
 
-        if (attacker.isHidden() && !attacker.isAuthorized("essentials.vanish.pvp")) {
-            event.setCancelled(true);
-        }
-
         if (attacker.arePowerToolsEnabled()) {
             onPlayerVsPlayerPowertool(event, defender, attacker);
         }
@@ -151,9 +146,6 @@ public class EssentialsEntityListener implements Listener {
                 if (srcCombuster.isGodModeEnabled() && !srcCombuster.isAuthorized("essentials.god.pvp")) {
                     event.setCancelled(true);
                 }
-                if (srcCombuster.isHidden() && !srcCombuster.isAuthorized("essentials.vanish.pvp")) {
-                    event.setCancelled(true);
-                }
             }
         }
     }
@@ -193,12 +185,12 @@ public class EssentialsEntityListener implements Listener {
         if (user.isAuthorized("essentials.keepinv")) {
             event.setKeepInventory(true);
             event.getDrops().clear();
-            final ISettings.KeepInvPolicy vanish = ess.getSettings().getVanishingItemsPolicy();
+            final ISettings.KeepInvPolicy vanishingPolicy = ess.getSettings().getVanishingItemsPolicy();
             final ISettings.KeepInvPolicy bind = ess.getSettings().getBindingItemsPolicy();
-            if (VersionUtil.getServerBukkitVersion().isHigherThanOrEqualTo(VersionUtil.v1_11_2_R01) && (vanish != ISettings.KeepInvPolicy.KEEP || bind != ISettings.KeepInvPolicy.KEEP)) {
+            if (VersionUtil.getServerBukkitVersion().isHigherThanOrEqualTo(VersionUtil.v1_11_2_R01) && (vanishingPolicy != ISettings.KeepInvPolicy.KEEP || bind != ISettings.KeepInvPolicy.KEEP)) {
                 Inventories.removeItems(user.getBase(), stack -> {
-                    if (vanish != ISettings.KeepInvPolicy.KEEP && stack.getEnchantments().containsKey(Enchantment.VANISHING_CURSE)) {
-                        if (vanish == ISettings.KeepInvPolicy.DROP) {
+                    if (vanishingPolicy != ISettings.KeepInvPolicy.KEEP && stack.getEnchantments().containsKey(Enchantment.VANISHING_CURSE)) {
+                        if (vanishingPolicy == ISettings.KeepInvPolicy.DROP) {
                             event.getDrops().add(stack.clone());
                         }
                         return true;
@@ -257,13 +249,4 @@ public class EssentialsEntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onEntityTarget(final EntityTargetEvent event) {
-        if (event.getTarget() instanceof Player) {
-            final User user = ess.getUser((Player) event.getTarget());
-            if (user.isVanished()) {
-                event.setCancelled(true);
-            }
-        }
-    }
 }

@@ -41,11 +41,8 @@ public class Commandplaytime extends EssentialsCommand {
                     throw e;
                 }
                 final User user = getPlayer(server, args, 0, true, true);
-                displayName = user.getName(); // Vanished players will have their name as their display name
+                displayName = user.getName();
                 playtime = Bukkit.getOfflinePlayer(user.getBase().getUniqueId()).getStatistic(PLAY_ONE_TICK);
-                if (user.getBase().isOnline() && user.isVanished()) {
-                    playtime = playtime - ((System.currentTimeMillis() - user.getLastVanishTime()) / 50L);
-                }
             }
             key = "playtimeOther";
         } else if (sender.isPlayer()) {

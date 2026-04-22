@@ -580,10 +580,6 @@ commands:
     description: Allows the unlimited placing of items.
     usage: /<command> <list|item|clear> [player]
     aliases: [eunlimited,ul,unl,eul,eunl]
-  vanish:
-    description: Hide yourself from other players.
-    usage: /<command> [player] [on|off]
-    aliases: [v,ev,evanish]
   warp:
     description: List all warps or warp to the specified location.
     usage: /<command> <pagenumber|warp> [player]
@@ -678,9 +674,6 @@ permissions:
   essentials.silentjoin:
     default: false
     description: Allow to join silently
-  essentials.silentjoin.vanish:
-    default: false
-    description: Allow to join silently, and get put in vanish mode
   essentials.silentquit:
     default: false
     description: Suppress leave/quit messages for users with this permission.

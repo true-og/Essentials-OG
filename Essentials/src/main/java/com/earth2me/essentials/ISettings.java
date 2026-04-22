@@ -204,8 +204,6 @@ public interface ISettings extends IConf {
 
     boolean sleepIgnoresAfkPlayers();
 
-    boolean sleepIgnoresVanishedPlayers();
-
     boolean isAfkListName();
 
     String getAfkListName();
@@ -278,8 +276,6 @@ public interface ISettings extends IConf {
 
     boolean ignoreColorsInMaxLength();
 
-    boolean hideDisplayNameInVanish();
-
     int getMaxUserCacheCount();
 
     long getMaxUserCacheValueExpiry();
@@ -305,8 +301,6 @@ public interface ISettings extends IConf {
     boolean isDropItemsIfFull();
 
     boolean isLastMessageReplyRecipient();
-
-    boolean isReplyToVanished();
 
     BigDecimal getMinimumPayAmount();
 

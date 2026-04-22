@@ -17,6 +17,8 @@ Clone this repository, then run the following command:
 
 - Removed log4j.
 
+- Removed vanish system in favor of [Vanish-OG](https://github.com/true-og/Vanish-OG).
+
 - Replaced EssentialsXSpawn with [Spawn-OG](https://github.com/true-og/Spawn-OG).
 
 - Removed all sub-projects.

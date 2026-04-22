@@ -21,7 +21,7 @@ public class Commandlist extends EssentialsCommand {
         User user = null;
         if (sender.isPlayer()) {
             user = ess.getUser(sender.getPlayer());
-            showHidden = user.isAuthorized("essentials.list.hidden") || user.canInteractVanished();
+            showHidden = user.isAuthorized("essentials.list.hidden");
         }
         sender.sendMessage(PlayerList.listSummary(ess, user, showHidden));
         final Map<String, List<User>> playerList = PlayerList.getPlayerLists(ess, user, showHidden);

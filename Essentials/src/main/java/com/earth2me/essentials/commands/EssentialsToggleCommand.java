@@ -46,12 +46,11 @@ public abstract class EssentialsToggleCommand extends EssentialsCommand {
             throw new PlayerNotFoundException();
         }
 
-        final boolean skipHidden = sender.isPlayer() && !ess.getUser(sender.getPlayer()).canInteractVanished();
         boolean foundUser = false;
         final List<Player> matchedPlayers = server.matchPlayer(args[0]);
         for (final Player matchPlayer : matchedPlayers) {
             final User player = ess.getUser(matchPlayer);
-            if (skipHidden && player.isHidden(sender.getPlayer()) && player.isHiddenFrom(sender.getPlayer())) {
+            if (sender.isPlayer() && player.isHidden(sender.getPlayer())) {
                 continue;
             }
             foundUser = true;

@@ -108,7 +108,7 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
         return name;
     }
 
-    // Get online players - only show vanished if source has permission
+    // Get online players and respect normal visibility rules
     protected User getPlayer(final Server server, final CommandSource sender, final String[] args, final int pos) throws PlayerNotFoundException, NotEnoughArgumentsException {
         return getPlayer(server, sender, args, pos, false);
     }
@@ -121,22 +121,22 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
         return getPlayer(server, args, pos, true, getOffline);
     }
 
-    // Get online players - only show vanished if source has permission
+    // Get online players and respect normal visibility rules
     protected User getPlayer(final Server server, final CommandSource sender, final String searchTerm) throws PlayerNotFoundException, NotEnoughArgumentsException {
         if (sender.isPlayer()) {
             final User user = ess.getUser(sender.getPlayer());
-            return getPlayer(server, user, searchTerm, user.canInteractVanished(), false);
+            return getPlayer(server, user, searchTerm, false, false);
         }
         return getPlayer(server, searchTerm, true, false);
     }
 
-    // Get online players - only show vanished if source has permission
+    // Get online players and respect normal visibility rules
     protected User getPlayer(final Server server, final User user, final String[] args, final int pos) throws PlayerNotFoundException, NotEnoughArgumentsException {
         return getPlayer(server, user, args, pos, false);
     }
 
     protected User getPlayer(final Server server, final User user, final String[] args, final int pos, final boolean getOffline) throws PlayerNotFoundException, NotEnoughArgumentsException {
-        return getPlayer(server, user, args, pos, user.canInteractVanished(), getOffline);
+        return getPlayer(server, user, args, pos, false, getOffline);
     }
 
     // Get online or offline players, this method allows for raw access

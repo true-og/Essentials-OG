@@ -25,10 +25,9 @@ public class Commandkick extends EssentialsCommand {
         }
 
         final User target = getPlayer(server, args, 0, true, false);
-        final User user = sender.isPlayer() ? ess.getUser(sender.getPlayer()) : null;
-
-        if (user != null) {
-            if (target.isHidden(sender.getPlayer()) && !user.canInteractVanished() && target.isHiddenFrom(sender.getPlayer())) {
+        if (sender.isPlayer()) {
+            final User user = ess.getUser(sender.getPlayer());
+            if (target.isHidden(sender.getPlayer())) {
                 throw new PlayerNotFoundException();
             }
 
@@ -40,7 +39,7 @@ public class Commandkick extends EssentialsCommand {
         String kickReason = args.length > 1 ? getFinalArg(args, 1) : tl("kickDefault");
         kickReason = FormatUtil.replaceFormat(kickReason.replace("\\n", "\n").replace("|", "\n"));
 
-        final UserKickEvent event = new UserKickEvent(user, target, kickReason);
+        final UserKickEvent event = new UserKickEvent(sender.isPlayer() ? ess.getUser(sender.getPlayer()) : null, target, kickReason);
         ess.getServer().getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {

@@ -281,7 +281,7 @@ public class KeywordReplacer implements IText {
                             if (user == null) {
                                 showHidden = true;
                             } else {
-                                showHidden = user.isAuthorized("essentials.list.hidden") || user.canInteractVanished();
+                                showHidden = user.isAuthorized("essentials.list.hidden");
                             }
 
                             //First lets build the per group playerlist

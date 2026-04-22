@@ -28,9 +28,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.math.BigDecimal;
@@ -66,9 +63,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     private final transient LinkedHashMap<String, TpaRequest> teleportRequestQueue = new LinkedHashMap<>();
 
     // User properties
-    private transient boolean vanished;
     private boolean hidden = false;
-    private boolean leavingHidden = false;
     private boolean rightClickJump = false;
     private boolean invSee = false;
     private boolean recipeSee = false;
@@ -92,8 +87,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     private Boolean toggleShout;
     private boolean freeze = false;
     private transient final List<String> signCopy = Lists.newArrayList("", "", "", "");
-    private transient long lastVanishTime = System.currentTimeMillis();
-
     public User(final Player base, final IEssentials ess) {
         super(base, ess);
         teleport = new AsyncTeleport(this, ess);
@@ -533,7 +526,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     @Override
     public String getDisplayName() {
-        return super.getBase().getDisplayName() == null || (ess.getSettings().hideDisplayNameInVanish() && isHidden()) ? super.getBase().getName() : super.getBase().getDisplayName();
+        return super.getBase().getDisplayName() == null ? super.getBase().getName() : super.getBase().getDisplayName();
     }
 
     @Override
@@ -688,16 +681,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     @Override
     public boolean isHidden() {
         return hidden;
-    }
-
-    @Override
-    public boolean isLeavingHidden() {
-        return leavingHidden;
-    }
-
-    @Override
-    public void setLeavingHidden(boolean leavingHidden) {
-        this.leavingHidden = leavingHidden;
     }
 
     @Override
@@ -953,10 +936,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
         return teleportInvulnerabilityTimestamp != 0 && teleportInvulnerabilityTimestamp >= System.currentTimeMillis();
     }
 
-    public boolean canInteractVanished() {
-        return isAuthorized("essentials.vanish.interact");
-    }
-
     @Override
     public boolean isIgnoreMsg() {
         return ignoreMsg;
@@ -965,46 +944,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     @Override
     public void setIgnoreMsg(final boolean ignoreMsg) {
         this.ignoreMsg = ignoreMsg;
-    }
-
-    @Override
-    public boolean isVanished() {
-        return vanished;
-    }
-
-    @Override
-    public void setVanished(final boolean set) {
-        vanished = set;
-        if (set) {
-            for (final User user : ess.getOnlineUsers()) {
-                if (!user.isAuthorized("essentials.vanish.see")) {
-                    user.getBase().hidePlayer(getBase());
-                }
-            }
-            setHidden(true);
-            lastVanishTime = System.currentTimeMillis();
-            ess.getVanishedPlayersNew().add(getName());
-            this.getBase().setMetadata("vanished", new FixedMetadataValue(ess, true));
-            if (isAuthorized("essentials.vanish.effect")) {
-                this.getBase().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
-            }
-            if (ess.getSettings().sleepIgnoresVanishedPlayers()) {
-                getBase().setSleepingIgnored(true);
-            }
-        } else {
-            for (final Player p : ess.getOnlinePlayers()) {
-                p.showPlayer(getBase());
-            }
-            setHidden(false);
-            ess.getVanishedPlayersNew().remove(getName());
-            this.getBase().setMetadata("vanished", new FixedMetadataValue(ess, false));
-            if (isAuthorized("essentials.vanish.effect")) {
-                this.getBase().removePotionEffect(PotionEffectType.INVISIBILITY);
-            }
-            if (ess.getSettings().sleepIgnoresVanishedPlayers() && !isAuthorized("essentials.sleepingignored")) {
-                getBase().setSleepingIgnored(false);
-            }
-        }
     }
 
     public boolean checkSignThrottle() {
@@ -1212,10 +1151,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
             return exempt;
         }
         return isBaltopExcludeCache();
-    }
-
-    public long getLastVanishTime() {
-        return lastVanishTime;
     }
 
     @Override

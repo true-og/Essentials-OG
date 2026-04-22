@@ -86,24 +86,13 @@ public interface IUser {
     void setAfk(final boolean set, final AfkStatusChangeEvent.Cause cause);
 
     /**
-     * 'Hidden' Represents when a player is hidden from others. This status includes when the player is hidden via other
-     * supported plugins. Use isVanished() if you want to check if a user is vanished by Essentials.
+     * Whether Essentials currently treats this user as hidden.
      *
      * @return If the user is hidden or not
-     * @see IUser#isVanished()
      */
     boolean isHidden();
 
-    /**
-     * Whether the user was hidden before leaving the server.
-     *
-     * @return true if the user was hidden.
-     */
-    boolean isLeavingHidden();
-
-    void setLeavingHidden(boolean leavingHidden);
-
-    void setHidden(boolean vanish);
+    void setHidden(boolean hidden);
 
     boolean isGodModeEnabled();
 
@@ -125,18 +114,6 @@ public interface IUser {
     void resetInvulnerabilityAfterTeleport();
 
     boolean hasInvulnerabilityAfterTeleport();
-
-    /**
-     * 'Vanished' Represents when a player is hidden from others by Essentials. This status does NOT include when the
-     * player is hidden via other plugins. Use isHidden() if you want to check if a user is vanished by any supported
-     * plugin.
-     *
-     * @return If the user is vanished or not
-     * @see IUser#isHidden()
-     */
-    boolean isVanished();
-
-    void setVanished(boolean vanish);
 
     boolean isIgnoreExempt();
 

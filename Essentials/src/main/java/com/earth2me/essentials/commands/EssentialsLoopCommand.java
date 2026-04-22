@@ -42,9 +42,8 @@ public abstract class EssentialsLoopCommand extends EssentialsCommand {
                 }
             }
         } else if (matchWildcards && searchTerm.contentEquals("*")) {
-            final boolean skipHidden = sender.isPlayer() && !ess.getUser(sender.getPlayer()).canInteractVanished();
             for (final User onlineUser : ess.getOnlineUsers()) {
-                if (skipHidden && onlineUser.isHidden(sender.getPlayer()) && onlineUser.isHiddenFrom(sender.getPlayer())) {
+                if (sender.isPlayer() && onlineUser.isHidden(sender.getPlayer())) {
                     continue;
                 }
                 userConsumer.accept(onlineUser);
@@ -77,11 +76,9 @@ public abstract class EssentialsLoopCommand extends EssentialsCommand {
             throw new PlayerNotFoundException();
         }
 
-        final boolean skipHidden = sender.isPlayer() && !ess.getUser(sender.getPlayer()).canInteractVanished();
-
         if (matchWildcards && (searchTerm.contentEquals("**") || searchTerm.contentEquals("*"))) {
             for (final User onlineUser : ess.getOnlineUsers()) {
-                if (skipHidden && onlineUser.isHidden(sender.getPlayer()) && onlineUser.isHiddenFrom(sender.getPlayer())) {
+                if (sender.isPlayer() && onlineUser.isHidden(sender.getPlayer())) {
                     continue;
                 }
                 userConsumer.accept(onlineUser);
@@ -96,7 +93,7 @@ public abstract class EssentialsLoopCommand extends EssentialsCommand {
             if (matchedPlayers.isEmpty()) {
                 final String matchText = searchTerm.toLowerCase(Locale.ENGLISH);
                 for (final User player : ess.getOnlineUsers()) {
-                    if (skipHidden && player.isHidden(sender.getPlayer()) && player.isHiddenFrom(sender.getPlayer())) {
+                    if (sender.isPlayer() && player.isHidden(sender.getPlayer())) {
                         continue;
                     }
                     final String displayName = FormatUtil.stripFormat(player.getDisplayName()).toLowerCase(Locale.ENGLISH);
@@ -108,7 +105,7 @@ public abstract class EssentialsLoopCommand extends EssentialsCommand {
             } else {
                 for (final Player matchPlayer : matchedPlayers) {
                     final User player = ess.getUser(matchPlayer);
-                    if (skipHidden && player.isHidden(sender.getPlayer()) && player.isHiddenFrom(sender.getPlayer())) {
+                    if (sender.isPlayer() && player.isHidden(sender.getPlayer())) {
                         continue;
                     }
                     foundUser = true;

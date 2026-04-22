@@ -1134,11 +1134,6 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBoolean("sleep-ignores-afk-players", true);
     }
 
-    @Override
-    public boolean sleepIgnoresVanishedPlayers() {
-        return config.getBoolean("sleep-ignores-vanished-player", true);
-    }
-
     public String _getAfkListName() {
         return FormatUtil.replaceFormat(config.getString("afk-list-name", "none"));
     }
@@ -1385,11 +1380,6 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBoolean("ignore-colors-in-max-nick-length", false);
     }
 
-    @Override
-    public boolean hideDisplayNameInVanish() {
-        return config.getBoolean("hide-displayname-in-vanish", false);
-    }
-
     public boolean _allowSilentJoinQuit() {
         return config.getBoolean("allow-silent-join-quit", false);
     }
@@ -1482,11 +1472,6 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean isLastMessageReplyRecipient() {
         return config.getBoolean("last-message-reply-recipient", false);
-    }
-
-    @Override
-    public boolean isReplyToVanished() {
-        return config.getBoolean("last-message-reply-vanished", true);
     }
 
     @Override

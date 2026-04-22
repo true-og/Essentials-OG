@@ -128,7 +128,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -144,7 +143,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     private static final Logger BUKKIT_LOGGER = Logger.getLogger("Essentials");
     private static Logger LOGGER = null;
     private final transient TNTExplodeListener tntListener = new TNTExplodeListener();
-    private final transient Set<String> vanishedPlayers = new LinkedHashSet<>();
     private transient ISettings settings;
     private transient Jails jails;
     private transient Warps warps;
@@ -540,9 +538,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         final EssentialsWorldListener worldListener = new EssentialsWorldListener(this);
         pm.registerEvents(worldListener, this);
 
-        final EssentialsServerListener serverListener = new EssentialsServerListener(this);
-        pm.registerEvents(serverListener, this);
-
         pm.registerEvents(tntListener, this);
 
         if (recipeBookEventProvider != null) {
@@ -560,10 +555,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         }
         getBackup().setPendingShutdown(true);
         for (final User user : getOnlineUsers()) {
-            if (user.isVanished()) {
-                user.setVanished(false);
-                user.sendMessage(tl("unvanishedReload"));
-            }
             if (stopping) {
                 user.setLogoutLocation();
                 if (!user.isHidden()) {
@@ -1212,16 +1203,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     @Override
     public MailService getMail() {
         return mail;
-    }
-
-    @Override
-    public List<String> getVanishedPlayers() {
-        return Collections.unmodifiableList(new ArrayList<>(vanishedPlayers));
-    }
-
-    @Override
-    public Collection<String> getVanishedPlayersNew() {
-        return vanishedPlayers;
     }
 
     @Override
