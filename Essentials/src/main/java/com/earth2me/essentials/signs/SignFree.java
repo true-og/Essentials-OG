@@ -1,6 +1,5 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
 import org.bukkit.Material;
@@ -49,7 +48,6 @@ public class SignFree extends EssentialsSign {
             invent.addItem(item);
         }
         player.getBase().openInventory(invent);
-        Trade.log("Sign", "Free", "Interact", username, null, username, new Trade(item, ess), sign.getBlock().getLocation(), player.getMoney(), ess);
         return true;
     }
 }

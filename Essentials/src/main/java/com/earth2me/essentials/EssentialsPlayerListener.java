@@ -441,7 +441,6 @@ public class EssentialsPlayerListener implements Listener, FakeAccessor {
                 }
 
                 user.setConfirmingClearCommand(null);
-                user.getConfirmingPayments().clear();
 
                 user.stopTransaction();
             }

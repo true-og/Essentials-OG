@@ -1,6 +1,5 @@
 package com.earth2me.essentials.commands;
 
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.google.common.collect.Lists;
 import org.bukkit.Location;
@@ -43,7 +42,7 @@ public class Commandworld extends EssentialsCommand {
                 user.sendMessage(tl("invalidWorld"));
                 user.sendMessage(tl("possibleWorlds", server.getWorlds().size() - 1));
                 user.sendMessage(tl("typeWorldName"));
-                throw new NoChargeException();
+                return;
             }
         }
 
@@ -63,11 +62,7 @@ public class Commandworld extends EssentialsCommand {
         final Location loc = user.getLocation();
         final Location target = new Location(world, loc.getBlockX() * factor + .5, loc.getBlockY(), loc.getBlockZ() * factor + .5);
 
-        final Trade charge = new Trade(this.getName(), ess);
-        charge.isAffordableFor(user);
-        user.getAsyncTeleport().teleport(target, charge, TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
-
-        throw new NoChargeException();
+        user.getAsyncTeleport().teleport(target, TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.earth2me.essentials.api.IAsyncTeleport;
 import com.earth2me.essentials.commands.IEssentialsCommand;
 import com.earth2me.essentials.config.entities.CommandCooldown;
 import net.ess3.api.ITeleport;
-import net.ess3.api.MaxMoneyException;
 import net.ess3.api.events.AfkStatusChangeEvent;
 import net.essentialsx.api.v2.services.mail.MailMessage;
 import net.essentialsx.api.v2.services.mail.MailSender;
@@ -13,8 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.math.BigDecimal;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,18 +38,6 @@ public interface IUser {
 
     void healCooldown() throws Exception;
 
-    void giveMoney(BigDecimal value) throws MaxMoneyException;
-
-    void giveMoney(final BigDecimal value, final CommandSource initiator) throws MaxMoneyException;
-
-    void payUser(final User reciever, final BigDecimal value) throws Exception;
-
-    void takeMoney(BigDecimal value);
-
-    void takeMoney(final BigDecimal value, final CommandSource initiator);
-
-    boolean canAfford(BigDecimal value);
-
     Boolean canSpawnItem(final Material material);
 
     void setLastLocation();
@@ -78,10 +63,6 @@ public interface IUser {
     ITeleport getTeleport();
 
     IAsyncTeleport getAsyncTeleport();
-
-    BigDecimal getMoney();
-
-    void setMoney(final BigDecimal value) throws MaxMoneyException;
 
     void setAfk(final boolean set, final AfkStatusChangeEvent.Cause cause);
 
@@ -216,14 +197,6 @@ public interface IUser {
 
     long getAfkSince();
 
-    boolean isAcceptingPay();
-
-    void setAcceptingPay(boolean acceptingPay);
-
-    boolean isPromptingPayConfirm();
-
-    void setPromptingPayConfirm(boolean prompt);
-
     boolean isPromptingClearConfirm();
 
     void setPromptingClearConfirm(boolean prompt);
@@ -231,8 +204,6 @@ public interface IUser {
     boolean isLastMessageReplyRecipient();
 
     void setLastMessageReplyRecipient(boolean enabled);
-
-    Map<User, BigDecimal> getConfirmingPayments();
 
     Block getTargetBlock(int maxDistance);
 

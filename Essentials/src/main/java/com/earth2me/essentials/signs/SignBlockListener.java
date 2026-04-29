@@ -5,7 +5,6 @@ import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.MaterialUtil;
 import net.ess3.api.IEssentials;
-import net.ess3.api.MaxMoneyException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -37,16 +36,12 @@ public class SignBlockListener implements Listener {
             event.getHandlers().unregister(this);
             return;
         }
-        try {
-            if (protectSignsAndBlocks(event.getBlock(), event.getPlayer())) {
-                event.setCancelled(true);
-            }
-        } catch (final MaxMoneyException ex) {
+        if (protectSignsAndBlocks(event.getBlock(), event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
-    public boolean protectSignsAndBlocks(final Block block, final Player player) throws MaxMoneyException {
+    public boolean protectSignsAndBlocks(final Block block, final Player player) {
         // prevent any signs be broken by destroying the block they are attached to
         if (EssentialsSign.checkIfBlockBreaksSigns(block)) {
             if (ess.getSettings().isDebug()) {

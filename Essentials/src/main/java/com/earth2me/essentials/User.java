@@ -2,24 +2,18 @@ package com.earth2me.essentials;
 
 import com.earth2me.essentials.commands.IEssentialsCommand;
 import com.earth2me.essentials.craftbukkit.Inventories;
-import com.earth2me.essentials.economy.EconomyLayer;
-import com.earth2me.essentials.economy.EconomyLayers;
 import com.earth2me.essentials.messaging.IMessageRecipient;
 import com.earth2me.essentials.messaging.SimpleMessageRecipient;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.EnumUtil;
 import com.earth2me.essentials.utils.FormatUtil;
-import com.earth2me.essentials.utils.NumberUtil;
 import com.earth2me.essentials.utils.TriState;
 import com.earth2me.essentials.utils.VersionUtil;
 import com.google.common.collect.Lists;
 import net.ess3.api.IEssentials;
-import net.ess3.api.MaxMoneyException;
 import net.ess3.api.events.AfkStatusChangeEvent;
 import net.ess3.api.events.JailStatusChangeEvent;
 import net.ess3.api.events.MuteStatusChangeEvent;
-import net.ess3.api.events.UserBalanceUpdateEvent;
-import net.essentialsx.api.v2.events.TransactionEvent;
 import net.essentialsx.api.v2.services.mail.MailSender;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,7 +24,6 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -39,9 +32,7 @@ import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
-import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -55,9 +46,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     private final IMessageRecipient messageRecipient;
     private transient final AsyncTeleport teleport;
     private transient final Teleport legacyTeleport;
-
-    // User command confirmation strings
-    private final Map<User, BigDecimal> confirmingPayments = new WeakHashMap<>();
 
     // User teleport variables
     private final transient LinkedHashMap<String, TpaRequest> teleportRequestQueue = new LinkedHashMap<>();
@@ -212,90 +200,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
             }
         }
         setLastHealTimestamp(now.getTimeInMillis());
-    }
-
-    @Override
-    public void giveMoney(final BigDecimal value) throws MaxMoneyException {
-        giveMoney(value, null);
-    }
-
-    @Override
-    public void giveMoney(final BigDecimal value, final CommandSource initiator) throws MaxMoneyException {
-        giveMoney(value, initiator, UserBalanceUpdateEvent.Cause.UNKNOWN);
-    }
-
-    public void giveMoney(final BigDecimal value, final CommandSource initiator, final UserBalanceUpdateEvent.Cause cause) throws MaxMoneyException {
-        if (value.signum() == 0) {
-            return;
-        }
-        setMoney(getMoney().add(value), cause);
-        sendMessage(tl("addedToAccount", NumberUtil.displayCurrency(value, ess)));
-        if (initiator != null) {
-            initiator.sendMessage(tl("addedToOthersAccount", NumberUtil.displayCurrency(value, ess), this.getDisplayName(), NumberUtil.displayCurrency(getMoney(), ess)));
-        }
-    }
-
-    @Override
-    public void payUser(final User reciever, final BigDecimal value) throws Exception {
-        payUser(reciever, value, UserBalanceUpdateEvent.Cause.UNKNOWN);
-    }
-
-    public void payUser(final User reciever, final BigDecimal value, final UserBalanceUpdateEvent.Cause cause) throws Exception {
-        if (value.compareTo(BigDecimal.ZERO) < 1) {
-            throw new Exception(tl("payMustBePositive"));
-        }
-
-        if (canAfford(value)) {
-            setMoney(getMoney().subtract(value), cause);
-            reciever.setMoney(reciever.getMoney().add(value), cause);
-            sendMessage(tl("moneySentTo", NumberUtil.displayCurrency(value, ess), reciever.getDisplayName()));
-            reciever.sendMessage(tl("moneyRecievedFrom", NumberUtil.displayCurrency(value, ess), getDisplayName()));
-            final TransactionEvent transactionEvent = new TransactionEvent(this.getSource(), reciever, value);
-            ess.getServer().getPluginManager().callEvent(transactionEvent);
-        } else {
-            throw new ChargeException(tl("notEnoughMoney", NumberUtil.displayCurrency(value, ess)));
-        }
-    }
-
-    @Override
-    public void takeMoney(final BigDecimal value) {
-        takeMoney(value, null);
-    }
-
-    @Override
-    public void takeMoney(final BigDecimal value, final CommandSource initiator) {
-        takeMoney(value, initiator, UserBalanceUpdateEvent.Cause.UNKNOWN);
-    }
-
-    public void takeMoney(final BigDecimal value, final CommandSource initiator, final UserBalanceUpdateEvent.Cause cause) {
-        if (value.signum() == 0) {
-            return;
-        }
-        try {
-            setMoney(getMoney().subtract(value), cause);
-        } catch (final MaxMoneyException ex) {
-            ess.getLogger().log(Level.WARNING, "Invalid call to takeMoney, total balance can't be more than the max-money limit.", ex);
-        }
-        sendMessage(tl("takenFromAccount", NumberUtil.displayCurrency(value, ess)));
-        if (initiator != null) {
-            initiator.sendMessage(tl("takenFromOthersAccount", NumberUtil.displayCurrency(value, ess), this.getDisplayName(), NumberUtil.displayCurrency(getMoney(), ess)));
-        }
-    }
-
-    @Override
-    public boolean canAfford(final BigDecimal cost) {
-        return canAfford(cost, true);
-    }
-
-    public boolean canAfford(final BigDecimal cost, final boolean permcheck) {
-        if (cost.signum() <= 0) {
-            return true;
-        }
-        final BigDecimal remainingBalance = getMoney().subtract(cost);
-        if (!permcheck || isAuthorized("essentials.eco.loan")) {
-            return remainingBalance.compareTo(ess.getSettings().getMinMoney()) >= 0;
-        }
-        return remainingBalance.signum() >= 0;
     }
 
     public void dispose() {
@@ -561,68 +465,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     }
 
     @Override
-    public BigDecimal getMoney() {
-        final long start = System.nanoTime();
-        final BigDecimal value = _getMoney();
-        final long elapsed = System.nanoTime() - start;
-        if (elapsed > ess.getSettings().getEconomyLagWarning()) {
-            ess.getLogger().log(Level.INFO, "Lag Notice - Slow Economy Response - Request took over {0}ms!", elapsed / 1000000.0);
-        }
-        return value;
-    }
-
-    @Override
-    public void setMoney(final BigDecimal value) throws MaxMoneyException {
-        setMoney(value, UserBalanceUpdateEvent.Cause.UNKNOWN);
-    }
-
-    private BigDecimal _getMoney() {
-        if (ess.getSettings().isEcoDisabled()) {
-            if (ess.getSettings().isDebug()) {
-                ess.getLogger().info("Internal economy functions disabled, aborting balance check.");
-            }
-            return BigDecimal.ZERO;
-        }
-        final EconomyLayer layer = EconomyLayers.getSelectedLayer();
-        if (layer != null && (layer.hasAccount(getBase()) || layer.createPlayerAccount(getBase()))) {
-            return layer.getBalance(getBase());
-        }
-        return super.getMoney();
-    }
-
-    public void setMoney(final BigDecimal value, final UserBalanceUpdateEvent.Cause cause) throws MaxMoneyException {
-        if (ess.getSettings().isEcoDisabled()) {
-            if (ess.getSettings().isDebug()) {
-                ess.getLogger().info("Internal economy functions disabled, aborting balance change.");
-            }
-            return;
-        }
-        final BigDecimal oldBalance = _getMoney();
-
-        final UserBalanceUpdateEvent updateEvent = new UserBalanceUpdateEvent(this.getBase(), oldBalance, value, cause);
-        ess.getServer().getPluginManager().callEvent(updateEvent);
-        final BigDecimal newBalance = updateEvent.getNewBalance();
-
-        final EconomyLayer layer = EconomyLayers.getSelectedLayer();
-        if (layer != null && (layer.hasAccount(getBase()) || layer.createPlayerAccount(getBase()))) {
-            layer.set(getBase(), newBalance);
-        }
-        super.setMoney(newBalance, true);
-        Trade.log("Update", "Set", "API", getName(), new Trade(newBalance, ess), null, null, null, newBalance, ess);
-    }
-
-    public void updateMoneyCache(final BigDecimal value) {
-        if (ess.getSettings().isEcoDisabled() || !EconomyLayers.isLayerSelected() || super.getMoney().equals(value)) {
-            return;
-        }
-        try {
-            super.setMoney(value, false);
-        } catch (final MaxMoneyException ex) {
-            // We don't want to throw any errors here, just updating a cache
-        }
-    }
-
-    @Override
     public void setAfk(final boolean set) {
         setAfk(set, AfkStatusChangeEvent.Cause.UNKNOWN);
     }
@@ -728,11 +570,11 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
                         final CompletableFuture<Boolean> future = new CompletableFuture<>();
                         getAsyncTeleport().back(future);
                         future.exceptionally(e -> {
-                            getAsyncTeleport().respawn(null, TeleportCause.PLUGIN, new CompletableFuture<>());
+                            getAsyncTeleport().respawn(TeleportCause.PLUGIN, new CompletableFuture<>());
                             return false;
                         });
                     } else if (ess.getSettings().getTeleportWhenFreePolicy() == ISettings.TeleportWhenFreePolicy.SPAWN) {
-                        getAsyncTeleport().respawn(null, TeleportCause.PLUGIN, new CompletableFuture<>());
+                        getAsyncTeleport().respawn(TeleportCause.PLUGIN, new CompletableFuture<>());
                     }
                     return true;
                 }
@@ -1067,11 +909,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
         return afkSince;
     }
 
-    @Override
-    public Map<User, BigDecimal> getConfirmingPayments() {
-        return confirmingPayments;
-    }
-
     public String getConfirmingClearCommand() {
         return confirmingClearCommand;
     }
@@ -1142,15 +979,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     @Override
     public void setFreeze(boolean freeze) {
         this.freeze = freeze;
-    }
-
-    public boolean isBaltopExempt() {
-        if (getBase().isOnline()) {
-            final boolean exempt = isAuthorized("essentials.balancetop.exclude");
-            setBaltopExemptCache(exempt);
-            return exempt;
-        }
-        return isBaltopExcludeCache();
     }
 
     @Override

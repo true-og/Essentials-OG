@@ -65,7 +65,6 @@ public class Commandkit extends EssentialsCommand {
             final Kit kit = new Kit(kitName, ess);
             kit.checkPerms(userFrom);
             kit.checkDelay(userFrom);
-            kit.checkAffordable(userFrom);
             kits.add(kit);
         }
 
@@ -73,11 +72,9 @@ public class Commandkit extends EssentialsCommand {
             try {
 
                 kit.checkDelay(userFrom);
-                kit.checkAffordable(userFrom);
                 if (!kit.expandItems(userTo))
                     continue;
                 kit.setTime(userFrom);
-                kit.chargeUser(userTo);
 
                 if (!userFrom.equals(userTo)) {
                     userFrom.sendMessage(tl("kitGiveTo", kit.getName(), userTo.getDisplayName()));

@@ -1,6 +1,5 @@
 package com.earth2me.essentials.commands;
 
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -24,8 +23,7 @@ public class Commandtphere extends EssentialsCommand {
         if (user.getWorld() != player.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !user.isAuthorized("essentials.worlds." + user.getWorld().getName())) {
             throw new Exception(tl("noPerm", "essentials.worlds." + user.getWorld().getName()));
         }
-        user.getAsyncTeleport().teleportPlayer(player, user.getBase(), new Trade(this.getName(), ess), TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
-        throw new NoChargeException();
+        user.getAsyncTeleport().teleportPlayer(player, user.getBase(), TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.earth2me.essentials.commands;
 
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.LocationUtil;
 import org.bukkit.Location;
@@ -31,6 +30,6 @@ public class Commandbottom extends EssentialsCommand {
                 user.sendMessage(tl("teleportBottom", safe.getWorld().getName(), safe.getBlockX(), safe.getBlockY(), safe.getBlockZ()));
             }
         });
-        user.getAsyncTeleport().teleport(safe, new Trade(this.getName(), ess), PlayerTeleportEvent.TeleportCause.COMMAND, future);
+        user.getAsyncTeleport().teleport(safe, PlayerTeleportEvent.TeleportCause.COMMAND, future);
     }
 }

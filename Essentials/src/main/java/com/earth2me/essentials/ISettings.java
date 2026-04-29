@@ -8,8 +8,6 @@ import org.bukkit.event.EventPriority;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 
 import java.io.File;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -51,14 +49,6 @@ public interface ISettings extends IConf {
     boolean isPersistShout();
 
     boolean isChatQuestionEnabled();
-
-    BigDecimal getCommandCost(IEssentialsCommand cmd);
-
-    BigDecimal getCommandCost(String label);
-
-    String getCurrencySymbol();
-
-    boolean isCurrencySymbolSuffixed();
 
     int getOversizedStackSize();
 
@@ -111,8 +101,6 @@ public interface ISettings extends IConf {
 
     int getSpawnMobLimit();
 
-    BigDecimal getStartingBalance();
-
     boolean isTeleportSafetyEnabled();
 
     boolean isForceDisableTeleportSafety();
@@ -143,8 +131,6 @@ public interface ISettings extends IConf {
 
     void setDebug(boolean debug);
 
-    boolean isEcoDisabled();
-
     @Deprecated
     boolean isTradeInStacks(int id);
 
@@ -161,14 +147,6 @@ public interface ISettings extends IConf {
     boolean warnOnBuildDisallow();
 
     boolean warnOnSmite();
-
-    BigDecimal getMaxMoney();
-
-    BigDecimal getMinMoney();
-
-    boolean isEcoLogEnabled();
-
-    boolean isEcoLogUpdateEnabled();
 
     boolean realNamesOnList();
 
@@ -260,8 +238,6 @@ public interface ISettings extends IConf {
 
     int getMailsPerMinute();
 
-    long getEconomyLagWarning();
-
     long getPermissionsLagWarning();
 
     void setEssentialsChatActive(boolean b);
@@ -302,10 +278,6 @@ public interface ISettings extends IConf {
 
     boolean isLastMessageReplyRecipient();
 
-    BigDecimal getMinimumPayAmount();
-
-    boolean isPayExcludesIgnoreList();
-
     long getLastMessageReplyRecipientTimeout();
 
     boolean isMilkBucketEasterEggEnabled();
@@ -333,10 +305,6 @@ public interface ISettings extends IConf {
     Entry<Pattern, Long> getCommandCooldownEntry(String label);
 
     boolean isCommandCooldownPersistent(String label);
-
-    boolean isNpcsInBalanceRanking();
-
-    NumberFormat getCurrencyFormat();
 
     List<EssentialsSign> getUnprotectedSignNames();
 
@@ -397,8 +365,6 @@ public interface ISettings extends IConf {
     boolean isRespawnAtBed();
 
     boolean isUpdateCheckEnabled();
-
-    boolean showZeroBaltop();
 
     int getMaxItemLore();
 

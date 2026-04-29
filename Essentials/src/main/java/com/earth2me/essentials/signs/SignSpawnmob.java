@@ -1,8 +1,6 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.ChargeException;
 import com.earth2me.essentials.SpawnMob;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
 
@@ -14,17 +12,13 @@ public class SignSpawnmob extends EssentialsSign {
     }
 
     @Override
-    protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
+    protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         validateInteger(sign, 1);
-        validateTrade(sign, 3, ess);
         return true;
     }
 
     @Override
-    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
-        final Trade charge = getTrade(sign, 3, ess);
-        charge.isAffordableFor(player);
-
+    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         try {
             final List<String> mobParts = SpawnMob.mobParts(sign.getLine(2));
             final List<String> mobData = SpawnMob.mobData(sign.getLine(2));
@@ -32,9 +26,6 @@ public class SignSpawnmob extends EssentialsSign {
         } catch (final Exception ex) {
             throw new SignException(ex.getMessage(), ex);
         }
-
-        charge.charge(player);
-        Trade.log("Sign", "Spawnmob", "Interact", username, null, username, charge, sign.getBlock().getLocation(), player.getMoney(), ess);
         return true;
     }
 }

@@ -23,8 +23,6 @@ import com.earth2me.essentials.commands.NoChargeException;
 import com.earth2me.essentials.commands.NotEnoughArgumentsException;
 import com.earth2me.essentials.commands.PlayerNotFoundException;
 import com.earth2me.essentials.commands.QuietAbortException;
-import com.earth2me.essentials.economy.EconomyLayers;
-import com.earth2me.essentials.economy.vault.VaultEconomyProvider;
 import com.earth2me.essentials.items.AbstractItemDb;
 import com.earth2me.essentials.items.CustomItemResolver;
 import com.earth2me.essentials.items.FlatItemDb;
@@ -42,7 +40,6 @@ import com.earth2me.essentials.userstorage.ModernUserMap;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.VersionUtil;
 import io.papermc.lib.PaperLib;
-import net.ess3.api.Economy;
 import net.ess3.api.IEssentials;
 import net.ess3.api.IItemDb;
 import net.ess3.api.IJails;
@@ -92,7 +89,6 @@ import net.ess3.provider.providers.PaperMaterialTagProvider;
 import net.ess3.provider.providers.PaperRecipeBookListener;
 import net.ess3.provider.providers.PaperSerializationProvider;
 import net.ess3.provider.providers.PaperServerStateProvider;
-import net.essentialsx.api.v2.services.BalanceTop;
 import net.essentialsx.api.v2.services.mail.MailService;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -146,7 +142,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     private transient ISettings settings;
     private transient Jails jails;
     private transient Warps warps;
-    private transient Worth worth;
     private transient List<IConf> confList;
     private transient Backup backup;
     private transient AbstractItemDb itemDb;
@@ -156,7 +151,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     @Deprecated
     private transient UserMap legacyUserMap;
     private transient ModernUserMap userMap;
-    private transient BalanceTopImpl balanceTop;
     private transient ExecuteTimer execTimer;
     private transient MailService mail;
     private transient I18n i18n;
@@ -182,10 +176,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     private transient RandomTeleport randomTeleport;
     private transient UpdateChecker updateChecker;
     private transient Map<String, IEssentialsCommand> commandMap = new HashMap<>();
-
-    static {
-        EconomyLayers.init();
-    }
 
     public Essentials() {
     }
@@ -222,9 +212,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         settings = new Settings(this);
         mail = new MailServiceImpl(this);
         userMap = new ModernUserMap(this);
-        balanceTop = new BalanceTopImpl(this);
         permissionsHandler = new PermissionsHandler(this, false);
-        Economy.setEss(this);
         confList = new ArrayList<>();
         jails = new Jails(this);
         registerListeners(server.getPluginManager());
@@ -233,13 +221,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
     @Override
     public void onLoad() {
-        try {
-            // Vault registers their Essentials provider at low priority, so we have to use normal priority here
-            Class.forName("net.milkbowl.vault.economy.Economy");
-            getServer().getServicesManager().register(net.milkbowl.vault.economy.Economy.class, new VaultEconomyProvider(this), this, ServicePriority.Normal);
-        } catch (final ClassNotFoundException ignored) {
-            // Probably safer than fetching for the plugin as bukkit may not have marked it as enabled at this point in time
-        }
     }
 
     @Override
@@ -310,9 +291,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             legacyUserMap = new UserMap(userMap);
             execTimer.mark("Init(Usermap)");
 
-            balanceTop = new BalanceTopImpl(this);
-            execTimer.mark("Init(BalanceTop)");
-
             kits = new Kits(this);
             confList.add(kits);
             upgrade.convertKits();
@@ -324,10 +302,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             warps = new Warps(this.getDataFolder());
             confList.add(warps);
             execTimer.mark("Init(Warp)");
-
-            worth = new Worth(this.getDataFolder());
-            confList.add(worth);
-            execTimer.mark("Init(Worth)");
 
             itemDb = getItemDbFromConfig();
             confList.add(itemDb);
@@ -353,8 +327,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             jails = new Jails(this);
             confList.add(jails);
             execTimer.mark("Init(Jails)");
-
-            EconomyLayers.onEnable(this);
 
             //Spawner item provider only uses one but it's here for legacy...
             spawnerItemProvider = new BlockMetaSpawnerItemProvider();
@@ -462,7 +434,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             timer = new EssentialsTimer(this);
             scheduleSyncRepeatingTask(timer, 1000, 50);
 
-            Economy.setEss(this);
             execTimer.mark("RegHandler");
 
             // Register /hat and /back default permissions
@@ -579,8 +550,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
         this.getPermissionsHandler().unregisterContexts();
 
-        Economy.setEss(null);
-        Trade.closeLog();
         getUsers().shutdown();
 
         HandlerList.unregisterAll(this);
@@ -588,7 +557,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
     @Override
     public void reload() {
-        Trade.closeLog();
 
         for (final IConf iConf : confList) {
             iConf.reloadConfig();
@@ -880,11 +848,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     @Override
     public Warps getWarps() {
         return warps;
-    }
-
-    @Override
-    public Worth getWorth() {
-        return worth;
     }
 
     @Override
@@ -1183,11 +1146,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     @Override
     public ModernUserMap getUsers() {
         return userMap;
-    }
-
-    @Override
-    public BalanceTop getBalanceTop() {
-        return balanceTop;
     }
 
     @Override

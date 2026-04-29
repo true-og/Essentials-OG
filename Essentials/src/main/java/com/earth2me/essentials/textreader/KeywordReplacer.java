@@ -41,7 +41,6 @@ enum KeywordType {
     PREFIX(KeywordCachable.CACHEABLE),
     SUFFIX(KeywordCachable.CACHEABLE),
     GROUP(KeywordCachable.CACHEABLE),
-    BALANCE(KeywordCachable.CACHEABLE),
     MAILS(KeywordCachable.CACHEABLE),
     PLAYTIME(KeywordCachable.CACHEABLE),
     WORLD(KeywordCachable.CACHEABLE),
@@ -225,11 +224,6 @@ public class KeywordReplacer implements IText {
                     case GROUP:
                         if (user != null) {
                             replacer = user.getGroup();
-                        }
-                        break;
-                    case BALANCE:
-                        if (user != null) {
-                            replacer = NumberUtil.displayCurrency(user.getMoney(), ess);
                         }
                         break;
                     case MAILS:

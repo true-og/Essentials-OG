@@ -1,7 +1,5 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.ChargeException;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -17,7 +15,6 @@ public class SignWarp extends EssentialsSign {
 
     @Override
     protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
-        validateTrade(sign, 3, ess);
         final String warpName = sign.getLine(1);
 
         if (warpName.isEmpty()) {
@@ -38,7 +35,7 @@ public class SignWarp extends EssentialsSign {
     }
 
     @Override
-    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
+    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         final String warpName = sign.getLine(1);
         final String group = sign.getLine(2);
 
@@ -52,14 +49,8 @@ public class SignWarp extends EssentialsSign {
             }
         }
 
-        final Trade charge = getTrade(sign, 3, ess);
         final CompletableFuture<Boolean> future = new CompletableFuture<>();
-        player.getAsyncTeleport().warp(player, warpName, charge, TeleportCause.PLUGIN, future);
-        future.thenAccept(success -> {
-            if (success) {
-                Trade.log("Sign", "Warp", "Interact", username, null, username, charge, sign.getBlock().getLocation(), player.getMoney(), ess);
-            }
-        });
+        player.getAsyncTeleport().warp(player, warpName, TeleportCause.PLUGIN, future);
         future.exceptionally(e -> {
             ess.showError(player.getSource(), e, "\\ sign: " + signName);
             return false;

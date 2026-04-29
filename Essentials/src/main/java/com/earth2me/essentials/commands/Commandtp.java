@@ -2,7 +2,6 @@ package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.Console;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -42,10 +41,8 @@ public class Commandtp extends EssentialsCommand {
                 if (user.getWorld() != player.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !user.isAuthorized("essentials.worlds." + player.getWorld().getName())) {
                     throw new Exception(tl("noPerm", "essentials.worlds." + player.getWorld().getName()));
                 }
-                final Trade charge = new Trade(this.getName(), ess);
-                charge.isAffordableFor(user);
-                user.getAsyncTeleport().teleport(player.getBase(), charge, TeleportCause.COMMAND, future);
-                throw new NoChargeException();
+                user.getAsyncTeleport().teleport(player.getBase(), TeleportCause.COMMAND, future);
+                break;
             case 3:
                 if (!user.isAuthorized("essentials.tp.position")) {
                     throw new Exception(tl("noPerm", "essentials.tp.position"));

@@ -1,8 +1,6 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.ChargeException;
 import com.earth2me.essentials.Enchantments;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.craftbukkit.Inventories;
 import net.ess3.api.IEssentials;
@@ -20,7 +18,7 @@ public class SignEnchant extends EssentialsSign {
     }
 
     @Override
-    protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
+    protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         final ItemStack stack;
         final String itemName = sign.getLine(1);
         final MaterialTagProvider tagProvider = ess.getMaterialTagProvider();
@@ -61,18 +59,15 @@ public class SignEnchant extends EssentialsSign {
         } catch (final Throwable ex) {
             throw new SignException(ex.getMessage(), ex);
         }
-        getTrade(sign, 3, ess);
         return true;
     }
 
     @Override
-    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
+    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         final ItemStack playerHand = Inventories.getItemInHand(player.getBase());
         final MaterialTagProvider tagProvider = ess.getMaterialTagProvider();
         final String itemName = sign.getLine(1);
         final ItemStack search = itemName.equals("*") || itemName.equalsIgnoreCase("any") || (tagProvider != null && tagProvider.tagExists(itemName) && tagProvider.isTagged(itemName, playerHand.getType())) ? null : getItemStack(itemName, 1, ess);
-        final Trade charge = getTrade(sign, 3, ess);
-        charge.isAffordableFor(player);
         final String[] enchantLevel = sign.getLine(2).split(":");
         final Enchantment enchantment = Enchantments.getByName(enchantLevel[0]);
         if (enchantment == null) {
@@ -115,8 +110,6 @@ public class SignEnchant extends EssentialsSign {
             player.sendMessage(tl("enchantmentApplied", enchantmentName.replace('_', ' ')));
         }
 
-        charge.charge(player);
-        Trade.log("Sign", "Enchant", "Interact", username, charge, username, charge, sign.getBlock().getLocation(), player.getMoney(), ess);
         player.getBase().updateInventory();
         return true;
     }

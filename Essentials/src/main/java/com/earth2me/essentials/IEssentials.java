@@ -22,7 +22,6 @@ import net.ess3.provider.SpawnerBlockProvider;
 import net.ess3.provider.SpawnerItemProvider;
 import net.ess3.provider.SyncCommandsProvider;
 import net.ess3.provider.WorldInfoProvider;
-import net.essentialsx.api.v2.services.BalanceTop;
 import net.essentialsx.api.v2.services.mail.MailService;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -88,8 +87,6 @@ public interface IEssentials extends Plugin {
 
     IWarps getWarps();
 
-    Worth getWorth();
-
     Backup getBackup();
 
     Kits getKits();
@@ -122,8 +119,6 @@ public interface IEssentials extends Plugin {
 
     @Deprecated
     UserMap getUserMap();
-
-    BalanceTop getBalanceTop();
 
     EssentialsTimer getTimer();
 

@@ -1,7 +1,5 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.ChargeException;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.commands.Commandrepair;
 import com.earth2me.essentials.commands.NotEnoughArgumentsException;
@@ -23,15 +21,11 @@ public class SignRepair extends EssentialsSign {
             sign.setLine(1, "§c<hand|all>");
             throw new SignException(tl("invalidSignLine", 2));
         }
-        validateTrade(sign, 2, ess);
         return true;
     }
 
     @Override
-    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
-        final Trade charge = getTrade(sign, 2, ess);
-        charge.isAffordableFor(player);
-
+    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         final Commandrepair command = new Commandrepair();
         command.setEssentials(ess);
 
@@ -48,8 +42,6 @@ public class SignRepair extends EssentialsSign {
             throw new SignException(ex.getMessage(), ex);
         }
 
-        charge.charge(player);
-        Trade.log("Sign", "Repair", "Interact", username, null, username, charge, sign.getBlock().getLocation(), player.getMoney(), ess);
         return true;
     }
 }

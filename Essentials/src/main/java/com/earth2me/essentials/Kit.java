@@ -1,13 +1,11 @@
 package com.earth2me.essentials;
 
-import com.earth2me.essentials.Trade.OverflowType;
 import com.earth2me.essentials.commands.NoChargeException;
 import com.earth2me.essentials.craftbukkit.Inventories;
 import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.DateUtil;
-import com.earth2me.essentials.utils.NumberUtil;
 import net.ess3.api.IEssentials;
 import net.ess3.api.events.KitClaimEvent;
 import net.essentialsx.api.v2.events.KitPreExpandItemsEvent;
@@ -16,7 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -31,13 +28,11 @@ public class Kit {
     final IEssentials ess;
     final String kitName;
     final Map<String, Object> kit;
-    final Trade charge;
 
     public Kit(final String kitName, final IEssentials ess) throws Exception {
         this.kitName = kitName;
         this.ess = ess;
         this.kit = ess.getKits().getKit(kitName);
-        this.charge = new Trade("kit-" + kitName, new Trade("kit-kit", ess), ess);
 
         if (kit == null) {
             throw new Exception(tl("kitNotFound"));
@@ -67,10 +62,6 @@ public class Kit {
         }
     }
 
-    public void checkAffordable(final User user) throws Exception {
-        charge.isAffordableFor(user);
-    }
-
     public void setTime(final User user) throws Exception {
         final Calendar time = new GregorianCalendar();
         user.setKitTimestamp(kitName, time.getTimeInMillis());
@@ -78,10 +69,6 @@ public class Kit {
 
     public void resetTime(final User user) {
         user.setKitTimestamp(kitName, 0);
-    }
-
-    public void chargeUser(final User user) throws Exception {
-        charge.charge(user);
     }
 
     public long getNextUse(final User user) throws Exception {
@@ -172,14 +159,7 @@ public class Kit {
             final boolean autoEquip = ess.getSettings().isKitAutoEquip();
             final List<ItemStack> itemList = new ArrayList<>();
             final List<String> commandQueue = new ArrayList<>();
-            final List<String> moneyQueue = new ArrayList<>();
-            final String currencySymbol = ess.getSettings().getCurrencySymbol().isEmpty() ? "$" : ess.getSettings().getCurrencySymbol();
             for (final String kitItem : output.getLines()) {
-                if (kitItem.startsWith("$") || kitItem.startsWith(currencySymbol)) {
-                    moneyQueue.add(NumberUtil.sanitizeCurrencyString(kitItem, ess));
-                    continue;
-                }
-
                 if (kitItem.startsWith("/")) {
                     String command = kitItem.substring(1);
                     final String name = user.getName();
@@ -248,15 +228,6 @@ public class Kit {
                 spew = true;
             }
             user.getBase().updateInventory();
-
-            // Process money & command queues
-            // Done after all items have been processed so commands are not run and money is not given if
-            // an error occurs during the item giving process
-            for (final String valueString : moneyQueue) {
-                final BigDecimal value = new BigDecimal(valueString.trim());
-                final Trade t = new Trade(value, ess);
-                t.pay(user, OverflowType.DROP);
-            }
 
             for (final String cmd : commandQueue) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);

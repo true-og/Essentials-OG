@@ -5,7 +5,7 @@ main: com.earth2me.essentials.Essentials
 version: @full.version@
 website: https://essentialsx.net/
 description: Provides an essential, core set of commands for Bukkit.
-softdepend: [Vault, LuckPerms]
+softdepend: [LuckPerms]
 authors: [Zenexer, ementalo, Aelux, Brettflan, KimKandor, snowleo, ceulemans, Xeology, KHobbits, md_5, Iaccidentally, drtshock, vemacs, SupaHam, mdcfe, JRoy, pop4959]
 api-version: "1.13"
 commands:
@@ -29,14 +29,6 @@ commands:
     description: Runs the backup if configured.
     usage: /<command>
     aliases: [ebackup]
-  balance:
-    description: States the current balance of a player.
-    usage: /<command> [player]
-    aliases: [bal,ebal,ebalance,money,emoney]
-  balancetop:
-    description: Gets the top balance values.
-    usage: /<command> [page]
-    aliases: [ebalancetop,baltop,ebaltop]
   ban:
     description: Bans a player.
     usage: /<command> <player> [reason]
@@ -89,10 +81,6 @@ commands:
     description: Toggles whether you are prompted to confirm inventory clears.
     usage: /<command>
     aliases: [eclearinventoryconfirmtoggle, clearinventoryconfirmoff, eclearinventoryconfirmoff, clearconfirmoff, eclearconfirmoff, clearconfirmon, eclearconfirmon, clearconfirm, eclearconfirm]
-  condense:
-    description: Condenses items into a more compact blocks.
-    usage: /<command> [itemname]
-    aliases: [econdense,compact,ecompact,blocks,eblocks,toblocks,etoblocks]
   compass:
     description: Describes your current bearing.
     usage: /<command>
@@ -128,10 +116,6 @@ commands:
     description: Opens a portable disposal menu.
     usage: /<command>
     aliases: [edisposal,trash,etrash]
-  eco:
-    description: Manages the server economy.
-    usage: /<command> <give|take|set|reset> <player> <amount>
-    aliases: [eeco,economy,eeconomy]
   enchant:
     description: Enchants the item the user is holding.
     usage: /<command> <enchantmentname> [level]
@@ -332,18 +316,6 @@ commands:
     description: Teleport to a player's last known logout location
     usage: /<command> <player>
     aliases: [otp, offlinetp, tpoff, tpoffline, etpoffline]
-  pay:
-    description: Pays another player from your balance.
-    usage: /<command> <player> <amount>
-    aliases: [epay]
-  paytoggle:
-    description: Toggles whether you are accepting payments.
-    usage: /<command> [player]
-    aliases: [epaytoggle, payoff, epayoff, payon, epayon]
-  payconfirmtoggle:
-    description: Toggles whether you are prompted to confirm payments.
-    usage: /<command>
-    aliases: [epayconfirmtoggle, payconfirmoff, epayconfirmoff, payconfirmon, epayconfirmon, payconfirm, epayconfirm]
   ping:
     description: Pong!
     usage: /<command>
@@ -412,10 +384,6 @@ commands:
     description: Shows the last logout time of a player.
     usage: /<command> <playername>
     aliases: [eseen, ealts, alts]
-  sell:
-    description: Sells the item currently in your hand.
-    usage: /<command> <<itemname>|<id>|hand|inventory|blocks> [amount]
-    aliases: [esell]
   sethome:
     description: Set your home to your current location.
     usage: /<command> [[player:]name]
@@ -432,10 +400,6 @@ commands:
     description: Creates a new warp.
     usage: /<command> <warp>
     aliases: [createwarp,ecreatewarp,esetwarp]
-  setworth:
-    description: Set the sell value of an item.
-    usage: /<command> [itemname|id] <price>
-    aliases: [esetworth]
   showkit:
     description: Show contents of a kit.
     usage: /<command> <kitname>
@@ -604,10 +568,6 @@ commands:
     description: Switch between worlds.
     usage: /<command> [world]
     aliases: [eworld]
-  worth:
-    description: Calculates the worth of items in hand or as specified.
-    usage: /<command> <<itemname>|<id>|hand|inventory|blocks> [-][amount]
-    aliases: [eprice,price,eworth]
 
 permissions:
   essentials.*:
@@ -686,9 +646,6 @@ permissions:
   essentials.nick.allowunsafe:
     default: false
     description: If a player has this, they can set their username to any value. Use with caution, as this has the potential to break userdata files.
-  essentials.balancetop.exclude:
-    default: false
-    description: Players with this permission are excluded from the balancetop
   essentials.back.onteleport:
     default: true
     description: Players with this permission will have back location stored during any teleportation

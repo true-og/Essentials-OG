@@ -2,11 +2,9 @@ package com.earth2me.essentials;
 
 import com.earth2me.essentials.config.ConfigurateUtil;
 import com.earth2me.essentials.config.EssentialsConfiguration;
-import com.earth2me.essentials.utils.NumberUtil;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -143,10 +141,6 @@ public class Kits implements IConf {
                 } else if (user.isAuthorized("essentials.kits." + kitItem.toLowerCase(Locale.ENGLISH))) {
                     String cost = "";
                     String name = capitalCase(kitItem);
-                    final BigDecimal costPrice = new Trade("kit-" + kitItem.toLowerCase(Locale.ENGLISH), ess).getCommandCost(user);
-                    if (costPrice.signum() > 0) {
-                        cost = tl("kitCost", NumberUtil.displayCurrency(costPrice, ess));
-                    }
 
                     final Kit kit = new Kit(kitItem, ess);
                     final double nextUse = kit.getNextUse(user);

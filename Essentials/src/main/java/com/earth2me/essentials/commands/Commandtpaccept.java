@@ -2,7 +2,6 @@ package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.AsyncTeleport;
 import com.earth2me.essentials.IUser;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import net.essentialsx.api.v2.events.TeleportRequestResponseEvent;
 import org.bukkit.Bukkit;
@@ -38,7 +37,7 @@ public class Commandtpaccept extends EssentialsCommand {
         if (args.length > 0) {
             if (acceptAll) {
                 acceptAllRequests(user, commandLabel);
-                throw new NoChargeException();
+                return;
             }
             user.sendMessage(tl("requestAccepted"));
             handleTeleport(user, user.getOutstandingTpaRequest(getPlayer(server, user, args, 0).getName(), true), commandLabel);
@@ -46,7 +45,6 @@ public class Commandtpaccept extends EssentialsCommand {
             user.sendMessage(tl("requestAccepted"));
             handleTeleport(user, user.getNextTpaRequest(true, false, false), commandLabel);
         }
-        throw new NoChargeException();
     }
 
     private void acceptAllRequests(final User user, final String commandLabel) throws Exception {
@@ -104,7 +102,6 @@ public class Commandtpaccept extends EssentialsCommand {
             return;
         }
 
-        final Trade charge = new Trade(this.getName(), ess);
         requester.sendMessage(tl("requestAcceptedFrom", user.getDisplayName()));
 
         final CompletableFuture<Boolean> future = getNewExceptionFuture(requester.getSource(), commandLabel);
@@ -121,11 +118,11 @@ public class Commandtpaccept extends EssentialsCommand {
                     requester.sendMessage(tl("teleporting", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
                 }
             });
-            teleport.teleportPlayer(user, loc, charge, TeleportCause.COMMAND, future);
+            teleport.teleportPlayer(user, loc, TeleportCause.COMMAND, future);
         } else {
             final AsyncTeleport teleport = requester.getAsyncTeleport();
             teleport.setTpType(AsyncTeleport.TeleportType.TPA);
-            teleport.teleport(user.getBase(), charge, TeleportCause.COMMAND, future);
+            teleport.teleport(user.getBase(), TeleportCause.COMMAND, future);
         }
         user.removeTpaRequest(request.getName());
     }

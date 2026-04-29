@@ -2,11 +2,8 @@ package com.earth2me.essentials.perm;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
-import com.earth2me.essentials.perm.impl.AbstractVaultHandler;
 import com.earth2me.essentials.perm.impl.ConfigPermissionsHandler;
-import com.earth2me.essentials.perm.impl.GenericVaultHandler;
 import com.earth2me.essentials.perm.impl.LuckPermsHandler;
-import com.earth2me.essentials.perm.impl.ModernVaultHandler;
 import com.earth2me.essentials.perm.impl.SuperpermsHandler;
 import com.earth2me.essentials.utils.TriState;
 import com.google.common.collect.ImmutableSet;
@@ -157,8 +154,6 @@ public class PermissionsHandler implements IPermissionsHandler {
         // load and assign a handler
         final List<Class<? extends SuperpermsHandler>> providerClazz = Arrays.asList(
             LuckPermsHandler.class,
-            ModernVaultHandler.class,
-            GenericVaultHandler.class,
             SuperpermsHandler.class
         );
         for (final Class<? extends IPermissionsHandler> providerClass : providerClazz) {
@@ -194,16 +189,14 @@ public class PermissionsHandler implements IPermissionsHandler {
         lastHandler = handlerClass;
 
         // output handler info
-        if (handler instanceof AbstractVaultHandler) {
-            String enabledPermsPlugin = ((AbstractVaultHandler) handler).getEnabledPermsPlugin();
-            if (enabledPermsPlugin == null) enabledPermsPlugin = "generic";
-            ess.getLogger().info("Using Vault based permissions (" + enabledPermsPlugin + ")");
+        if (handler instanceof LuckPermsHandler) {
+            ess.getLogger().info("Using LuckPerms permissions.");
         } else if (handler.getClass() == SuperpermsHandler.class) {
             if (handler.tryProvider(ess)) {
                 ess.getLogger().warning("Detected supported permissions plugin " +
-                    ((SuperpermsHandler) handler).getEnabledPermsPlugin() + " without Vault installed.");
+                    ((SuperpermsHandler) handler).getEnabledPermsPlugin() + " without LuckPerms installed.");
                 ess.getLogger().warning("Features such as chat prefixes/suffixes and group-related functionality will not " +
-                    "work until you install Vault.");
+                    "work until you install LuckPerms.");
             }
             ess.getLogger().info("Using superperms-based permissions.");
         } else if (handler.getClass() == ConfigPermissionsHandler.class) {

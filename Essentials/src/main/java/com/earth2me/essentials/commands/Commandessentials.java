@@ -4,8 +4,6 @@ import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.EssentialsUpgrade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.craftbukkit.Inventories;
-import com.earth2me.essentials.economy.EconomyLayer;
-import com.earth2me.essentials.economy.EconomyLayers;
 import com.earth2me.essentials.userstorage.ModernUserMap;
 import com.earth2me.essentials.utils.CommandMapUtil;
 import com.earth2me.essentials.utils.DateUtil;
@@ -73,8 +71,6 @@ public class Commandessentials extends EssentialsCommand {
     private static final String[] CONSOLE_MOO = new String[] {"         (__)", "         (oo)", "   /------\\/", "  / |    ||", " *  /\\---/\\", "    ~~   ~~", "....\"Have you mooed today?\"..."};
     private static final String[] PLAYER_MOO = new String[] {"            (__)", "            (oo)", "   /------\\/", "  /  |      | |", " *  /\\---/\\", "    ~~    ~~", "....\"Have you mooed today?\"..."};
     private static final List<String> versionPlugins = Arrays.asList(
-        "Vault", // API
-        "Reserve", // API
         "PlaceholderAPI", // API
         "CMI", // potential for issues
         "Towny", // past issues; admins should ensure latest
@@ -283,14 +279,6 @@ public class Commandessentials extends EssentialsCommand {
         updateData.addProperty("branch", ess.getUpdateChecker().getVersionBranch());
         updateData.addProperty("dev", ess.getUpdateChecker().isDevBuild());
         essData.add("update-data", updateData);
-        final JsonObject econLayer = new JsonObject();
-        econLayer.addProperty("enabled", !ess.getSettings().isEcoDisabled());
-        econLayer.addProperty("selected-layer", EconomyLayers.isLayerSelected());
-        final EconomyLayer layer = EconomyLayers.getSelectedLayer();
-        econLayer.addProperty("name", layer == null ? "null" : layer.getName());
-        econLayer.addProperty("layer-version", layer == null ? "null" : layer.getPluginVersion());
-        econLayer.addProperty("backend-name", layer == null ? "null" : layer.getBackendName());
-        essData.add("economy-layer", econLayer);
         final JsonArray addons = new JsonArray();
         final JsonArray plugins = new JsonArray();
         final ArrayList<Plugin> alphabetical = new ArrayList<>();
@@ -340,7 +328,6 @@ public class Commandessentials extends EssentialsCommand {
             boolean discord = false;
             boolean kits = false;
             boolean log = false;
-            boolean worth = false;
             boolean tpr = false;
             boolean spawns = false;
             boolean commands = false;
@@ -350,7 +337,6 @@ public class Commandessentials extends EssentialsCommand {
                     discord = true;
                     kits = true;
                     log = true;
-                    worth = true;
                     tpr = true;
                     spawns = true;
                     commands = true;
@@ -363,8 +349,6 @@ public class Commandessentials extends EssentialsCommand {
                     kits = true;
                 } else if (arg.equalsIgnoreCase("log")) {
                     log = true;
-                } else if (arg.equalsIgnoreCase("worth")) {
-                    worth = true;
                 } else if (arg.equalsIgnoreCase("tpr")) {
                     tpr = true;
                 } else if (arg.equalsIgnoreCase("spawns")) {
@@ -416,14 +400,6 @@ public class Commandessentials extends EssentialsCommand {
                             .replaceAll("(?:[0-9]{1,3}\\.){3}[0-9]{1,3}", "<censored ip address>")));
                 } catch (IOException e) {
                     sender.sendMessage(tl("dumpErrorUpload", "latest.log", e.getMessage()));
-                }
-            }
-
-            if (worth) {
-                try {
-                    files.add(new PasteUtil.PasteFile("worth.yml", new String(Files.readAllBytes(ess.getWorth().getFile().toPath()), StandardCharsets.UTF_8)));
-                } catch (IOException e) {
-                    sender.sendMessage(tl("dumpErrorUpload", "worth.yml", e.getMessage()));
                 }
             }
 
@@ -532,15 +508,14 @@ public class Commandessentials extends EssentialsCommand {
         if (args.length < 2 || !NumberUtil.isInt(args[1])) {
             sender.sendMessage("This sub-command will delete users who haven't logged in in the last <days> days.");
             sender.sendMessage("Optional parameters define the minimum amount required to prevent deletion.");
-            sender.sendMessage("Unless you define larger default values, this command will ignore people who have more than 0 money/homes.");
-            throw new Exception("/<command> cleanup <days> [money] [homes]");
+            sender.sendMessage("Unless you define larger default values, this command will ignore people who have more than 0 homes.");
+            throw new Exception("/<command> cleanup <days> [homes]");
         }
 
         sender.sendMessage(tl("cleaning"));
 
         final long daysArg = Long.parseLong(args[1]);
-        final double moneyArg = args.length >= 3 ? FloatUtil.parseDouble(args[2].replaceAll("[^0-9\\.]", "")) : 0;
-        final int homesArg = args.length >= 4 && NumberUtil.isInt(args[3]) ? Integer.parseInt(args[3]) : 0;
+        final int homesArg = args.length >= 3 && NumberUtil.isInt(args[2]) ? Integer.parseInt(args[2]) : 0;
 
         ess.runTaskAsynchronously(() -> {
             final long currTime = System.currentTimeMillis();
@@ -565,14 +540,13 @@ public class Commandessentials extends EssentialsCommand {
                 final long timeDiff = currTime - lastLog;
                 final long milliDays = daysArg * 24L * 60L * 60L * 1000L;
                 final int homeCount = user.getHomes().size();
-                final double moneyCount = user.getMoney().doubleValue();
 
-                if ((lastLog == 0) || (timeDiff < milliDays) || (homeCount > homesArg) || (moneyCount > moneyArg)) {
+                if ((lastLog == 0) || (timeDiff < milliDays) || (homeCount > homesArg)) {
                     continue;
                 }
 
                 if (ess.getSettings().isDebug()) {
-                    ess.getLogger().info("Deleting user: " + user.getName() + " Money: " + moneyCount + " Homes: " + homeCount + " Last seen: " + DateUtil.formatDateDiff(lastLog));
+                    ess.getLogger().info("Deleting user: " + user.getName() + " Homes: " + homeCount + " Last seen: " + DateUtil.formatDateDiff(lastLog));
                 }
 
                 user.reset();
@@ -723,7 +697,7 @@ public class Commandessentials extends EssentialsCommand {
         if (sender.isPlayer() && !ess.getUser(sender.getPlayer()).isAuthorized("essentials.version")) return;
 
         boolean isMismatched = false;
-        boolean isVaultInstalled = false;
+        boolean isLuckPermsInstalled = false;
         boolean isUnsupported = false;
         final VersionUtil.SupportStatus supportStatus = VersionUtil.getServerSupportStatus();
         final PluginManager pm = server.getPluginManager();
@@ -773,26 +747,15 @@ public class Commandessentials extends EssentialsCommand {
                 }
             }
 
-            if (name.equals("Vault")) isVaultInstalled = true;
+            if (name.equals("LuckPerms")) isLuckPermsInstalled = true;
         }
-
-        final String layer;
-        if (ess.getSettings().isEcoDisabled()) {
-            layer = "Disabled";
-        } else if (EconomyLayers.isLayerSelected()) {
-            final EconomyLayer economyLayer = EconomyLayers.getSelectedLayer();
-            layer = economyLayer.getName() + " (" + economyLayer.getBackendName() + ")";
-        } else {
-            layer = "None";
-        }
-        sender.sendMessage(tl("versionOutputEconLayer", layer));
 
         if (isMismatched) {
             sender.sendMessage(tl("versionMismatchAll"));
         }
 
-        if (!isVaultInstalled) {
-            sender.sendMessage(tl("versionOutputVaultMissing"));
+        if (!isLuckPermsInstalled) {
+            sender.sendMessage(tl("versionOutputLuckPermsMissing"));
         }
 
         if (isUnsupported) {
@@ -875,7 +838,7 @@ public class Commandessentials extends EssentialsCommand {
                 }
                 break;
             case "dump":
-                final List<String> list = Lists.newArrayList("config", "kits", "log", "discord", "worth", "tpr", "spawns", "commands", "all");
+                final List<String> list = Lists.newArrayList("config", "kits", "log", "discord", "tpr", "spawns", "commands", "all");
                 for (String arg : args) {
                     if (arg.equals("*") || arg.equalsIgnoreCase("all")) {
                         list.clear();

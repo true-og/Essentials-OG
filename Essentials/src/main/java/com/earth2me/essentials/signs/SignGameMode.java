@@ -1,7 +1,5 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.ChargeException;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
 import org.bukkit.GameMode;
@@ -22,27 +20,19 @@ public class SignGameMode extends EssentialsSign {
         if (gamemode.isEmpty()) {
             sign.setLine(1, "Survival");
         }
-
-        validateTrade(sign, 2, ess);
-
         return true;
     }
 
     @Override
-    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
-        final Trade charge = getTrade(sign, 2, ess);
+    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         final String mode = sign.getLine(1).trim();
 
         if (mode.isEmpty()) {
             throw new SignException(tl("invalidSignLine", 2));
         }
 
-        charge.isAffordableFor(player);
-
         performSetMode(mode.toLowerCase(Locale.ENGLISH), player.getBase());
         player.sendMessage(tl("gameMode", tl(player.getBase().getGameMode().toString().toLowerCase(Locale.ENGLISH)), player.getDisplayName()));
-        Trade.log("Sign", "gameMode", "Interact", username, null, username, charge, sign.getBlock().getLocation(), player.getMoney(), ess);
-        charge.charge(player);
         return true;
     }
 

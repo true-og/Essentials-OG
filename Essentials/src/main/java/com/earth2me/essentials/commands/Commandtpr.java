@@ -1,7 +1,6 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.RandomTeleport;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import net.ess3.api.events.UserRandomTeleportEvent;
 import org.bukkit.Server;
@@ -21,8 +20,6 @@ public class Commandtpr extends EssentialsCommand {
 
     @Override
     protected void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
-        final Trade charge = new Trade(this.getName(), ess);
-        charge.isAffordableFor(user);
         final RandomTeleport randomTeleport = ess.getRandomTeleport();
         final UserRandomTeleportEvent event = new UserRandomTeleportEvent(user, randomTeleport.getCenter(), randomTeleport.getMinRange(), randomTeleport.getMaxRange());
         server.getPluginManager().callEvent(event);
@@ -31,14 +28,13 @@ public class Commandtpr extends EssentialsCommand {
         }
         randomTeleport.getRandomLocation(event.getCenter(), event.getMinRange(), event.getMaxRange()).thenAccept(location -> {
             final CompletableFuture<Boolean> future = getNewExceptionFuture(user.getSource(), commandLabel);
-            user.getAsyncTeleport().teleport(location, charge, PlayerTeleportEvent.TeleportCause.COMMAND, future);
+            user.getAsyncTeleport().teleport(location, PlayerTeleportEvent.TeleportCause.COMMAND, future);
             future.thenAccept(success -> {
                 if (success) {
                     user.sendMessage(tl("tprSuccess"));
                 }
             });
         });
-        throw new NoChargeException();
     }
 
     @Override

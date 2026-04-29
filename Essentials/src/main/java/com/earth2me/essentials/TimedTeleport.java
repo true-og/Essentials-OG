@@ -27,12 +27,11 @@ public class TimedTeleport implements Runnable {
     private final ITarget timer_teleportTarget;
     private final boolean timer_respawn;
     private final boolean timer_canMove;
-    private final Trade timer_chargeFor;
     private final TeleportCause timer_cause;
     private int timer_task;
     private double timer_health;
 
-    TimedTeleport(final IUser user, final IEssentials ess, final Teleport teleport, final long delay, final IUser teleportUser, final ITarget target, final Trade chargeFor, final TeleportCause cause, final boolean respawn) {
+    TimedTeleport(final IUser user, final IEssentials ess, final Teleport teleport, final long delay, final IUser teleportUser, final ITarget target, final TeleportCause cause, final boolean respawn) {
         this.teleportOwner = user;
         this.ess = ess;
         this.teleport = teleport;
@@ -44,7 +43,6 @@ public class TimedTeleport implements Runnable {
         this.timer_initZ = Math.round(teleportUser.getBase().getLocation().getZ() * MOVE_CONSTANT);
         this.timer_teleportee = teleportUser.getBase().getUniqueId();
         this.timer_teleportTarget = target;
-        this.timer_chargeFor = chargeFor;
         this.timer_cause = cause;
         this.timer_respawn = respawn;
         this.timer_canMove = user.isAuthorized("essentials.teleport.timer.move");
@@ -98,18 +96,11 @@ public class TimedTeleport implements Runnable {
                         cancelTimer(false);
                         teleportUser.sendMessage(tl("teleportationCommencing"));
 
-                        if (timer_chargeFor != null) {
-                            timer_chargeFor.isAffordableFor(teleportOwner);
-                        }
                         if (timer_respawn) {
                             teleport.respawnNow(teleportUser, timer_cause);
                         } else {
                             teleport.now(teleportUser, timer_teleportTarget, timer_cause);
                         }
-                        if (timer_chargeFor != null) {
-                            timer_chargeFor.charge(teleportOwner);
-                        }
-
                     } catch (final Exception ex) {
                         ess.showError(teleportOwner.getSource(), ex, "\\ teleport");
                     }

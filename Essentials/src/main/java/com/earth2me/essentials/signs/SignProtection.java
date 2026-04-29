@@ -1,19 +1,14 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.ChargeException;
-import com.earth2me.essentials.Trade;
-import com.earth2me.essentials.Trade.OverflowType;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.EnumUtil;
 import com.earth2me.essentials.utils.MaterialUtil;
 import net.ess3.api.IEssentials;
-import net.ess3.api.MaxMoneyException;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -35,7 +30,7 @@ public class SignProtection extends EssentialsSign {
     }
 
     @Override
-    protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
+    protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         sign.setLine(3, "§4" + username);
         if (hasAdjacentBlock(sign.getBlock())) {
             final SignProtectionState state = isBlockProtected(sign.getBlock(), player, username, true);
@@ -69,15 +64,14 @@ public class SignProtection extends EssentialsSign {
         return false;
     }
 
-    private void checkIfSignsAreBroken(final Block block, final User player, final String username, final IEssentials ess) throws MaxMoneyException {
+    private void checkIfSignsAreBroken(final Block block, final User player, final String username, final IEssentials ess) {
         final Map<Location, SignProtectionState> signs = getConnectedSigns(block, player, username, false);
         for (final Map.Entry<Location, SignProtectionState> entry : signs.entrySet()) {
             if (entry.getValue() != SignProtectionState.NOSIGN) {
                 final Block sign = entry.getKey().getBlock();
                 if (!hasAdjacentBlock(sign, block)) {
                     block.setType(Material.AIR);
-                    final Trade trade = new Trade(new ItemStack(sign.getType(), 1), ess);
-                    trade.pay(player, OverflowType.DROP);
+                    player.getWorld().dropItemNaturally(player.getLocation(), new org.bukkit.inventory.ItemStack(sign.getType(), 1));
                 }
             }
         }
@@ -226,7 +220,7 @@ public class SignProtection extends EssentialsSign {
     }
 
     @Override
-    protected boolean onBlockBreak(final Block block, final User player, final String username, final IEssentials ess) throws SignException, MaxMoneyException {
+    protected boolean onBlockBreak(final Block block, final User player, final String username, final IEssentials ess) throws SignException {
         final SignProtectionState state = isBlockProtected(block, player, username, false);
 
         if (state == SignProtectionState.OWNER || state == SignProtectionState.NOSIGN) {

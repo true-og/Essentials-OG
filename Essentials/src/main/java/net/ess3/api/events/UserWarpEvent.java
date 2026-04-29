@@ -1,6 +1,5 @@
 package net.ess3.api.events;
 
-import com.earth2me.essentials.Trade;
 import net.ess3.api.IUser;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
@@ -14,15 +13,13 @@ public class UserWarpEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private final IUser user;
-    private final Trade trade;
     private String warp;
     private boolean cancelled = false;
 
-    public UserWarpEvent(final IUser user, final String warp, final Trade trade) {
+    public UserWarpEvent(final IUser user, final String warp) {
         super(!Bukkit.getServer().isPrimaryThread());
         this.user = user;
         this.warp = warp;
-        this.trade = trade;
     }
 
     public static HandlerList getHandlerList() {
@@ -39,15 +36,6 @@ public class UserWarpEvent extends Event implements Cancellable {
 
     public void setWarp(final String warp) {
         this.warp = warp;
-    }
-
-    /**
-     * Getting payment handling information
-     *
-     * @return The payment handling class
-     */
-    public Trade getTrade() {
-        return trade;
     }
 
     @Override

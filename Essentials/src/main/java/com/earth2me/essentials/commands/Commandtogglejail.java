@@ -142,12 +142,12 @@ public class Commandtogglejail extends EssentialsCommand {
                     if (ess.getSettings().getTeleportWhenFreePolicy() == ISettings.TeleportWhenFreePolicy.BACK) {
                         player.getAsyncTeleport().back(future);
                         future.exceptionally(e -> {
-                            player.getAsyncTeleport().respawn(null, PlayerTeleportEvent.TeleportCause.PLUGIN, new CompletableFuture<>());
+                            player.getAsyncTeleport().respawn(PlayerTeleportEvent.TeleportCause.PLUGIN, new CompletableFuture<>());
                             sender.sendMessage(tl("jailReleased", player.getName()));
                             return false;
                         });
                     } else if (ess.getSettings().getTeleportWhenFreePolicy() == ISettings.TeleportWhenFreePolicy.SPAWN) {
-                        player.getAsyncTeleport().respawn(null, PlayerTeleportEvent.TeleportCause.PLUGIN, future);
+                        player.getAsyncTeleport().respawn(PlayerTeleportEvent.TeleportCause.PLUGIN, future);
                     }
                     return;
                 }

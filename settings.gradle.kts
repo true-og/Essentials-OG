@@ -6,10 +6,7 @@ dependencyResolutionManagement {
         maven("https://repo.purpurmc.org/snapshots/")
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
         maven("https://repo.papermc.io/repository/maven-public/")
-        maven("https://jitpack.io") {
-            content { includeGroup("com.github.milkbowl") }
-            content { includeGroup("com.github.MinnDevelopment") }
-        }
+        maven("https://jitpack.io") { content { includeGroup("com.github.MinnDevelopment") } }
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") {
             content { includeGroup("me.clip") }
         }

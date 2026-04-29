@@ -1,7 +1,6 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.AsyncTeleport;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import net.ess3.api.events.TPARequestEvent;
 import org.bukkit.Server;
@@ -44,18 +43,17 @@ public class Commandtpa extends EssentialsCommand {
         }
 
         if (player.isAutoTeleportEnabled() && !player.isIgnoredPlayer(user)) {
-            final Trade charge = new Trade(this.getName(), ess);
             final AsyncTeleport teleport = user.getAsyncTeleport();
             teleport.setTpType(AsyncTeleport.TeleportType.TPA);
             final CompletableFuture<Boolean> future = getNewExceptionFuture(user.getSource(), commandLabel);
-            teleport.teleport(player.getBase(), charge, PlayerTeleportEvent.TeleportCause.COMMAND, future);
+            teleport.teleport(player.getBase(), PlayerTeleportEvent.TeleportCause.COMMAND, future);
             future.thenAccept(success -> {
                 if (success) {
                     player.sendMessage(tl("requestAcceptedAuto", user.getDisplayName()));
                     user.sendMessage(tl("requestAcceptedFromAuto", player.getDisplayName()));
                 }
             });
-            throw new NoChargeException();
+            return;
         }
 
         if (!player.isIgnoredPlayer(user)) {

@@ -2,7 +2,6 @@ package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.IEssentialsModule;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.google.common.collect.ImmutableList;
@@ -165,10 +164,7 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
 
     @Override
     public final void run(final Server server, final User user, final String commandLabel, final Command cmd, final String[] args) throws Exception {
-        final Trade charge = new Trade(this.getName(), ess);
-        charge.isAffordableFor(user);
         run(server, user, commandLabel, args);
-        charge.charge(user);
     }
 
     protected void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {

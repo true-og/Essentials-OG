@@ -1,7 +1,6 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 
@@ -62,17 +61,12 @@ public class Commandback extends EssentialsCommand {
         }
 
         if (requester == null) {
-            user.getAsyncTeleport().back(null, null, getNewExceptionFuture(sender, commandLabel));
+            user.getAsyncTeleport().back(null, getNewExceptionFuture(sender, commandLabel));
         } else if (!requester.equals(user)) {
-            final Trade charge = new Trade(this.getName(), this.ess);
-            charge.isAffordableFor(requester);
-            user.getAsyncTeleport().back(requester, charge, getNewExceptionFuture(sender, commandLabel));
+            user.getAsyncTeleport().back(requester, getNewExceptionFuture(sender, commandLabel));
         } else {
-            final Trade charge = new Trade(this.getName(), this.ess);
-            charge.isAffordableFor(user);
-            user.getAsyncTeleport().back(charge, getNewExceptionFuture(sender, commandLabel));
+            user.getAsyncTeleport().back(getNewExceptionFuture(sender, commandLabel));
         }
-        throw new NoChargeException();
     }
 
     @Override

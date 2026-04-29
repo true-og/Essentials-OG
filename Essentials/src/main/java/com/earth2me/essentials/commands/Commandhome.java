@@ -1,7 +1,6 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.OfflinePlayerStub;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.StringUtil;
 import io.papermc.lib.PaperLib;
@@ -25,7 +24,6 @@ public class Commandhome extends EssentialsCommand {
     // This method contains an undocumented translation parameters #EasterEgg
     @Override
     public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
-        final Trade charge = new Trade(this.getName(), ess);
         User player = user;
         String homeName = "";
         final String[] nameParts;
@@ -58,14 +56,14 @@ public class Commandhome extends EssentialsCommand {
                                 user.sendMessage(tl("teleportHome", "bed"));
                             }
                         });
-                        user.getAsyncTeleport().teleport(location, charge, TeleportCause.COMMAND, future);
+                        user.getAsyncTeleport().teleport(location, TeleportCause.COMMAND, future);
                     } else {
                         showError(user.getBase(), new Exception(tl("bedMissing")), commandLabel);
                     }
                 });
-                throw new NoChargeException();
+                return;
             }
-            goHome(user, player, homeName.toLowerCase(Locale.ENGLISH), charge, getNewExceptionFuture(user.getSource(), commandLabel));
+            goHome(user, player, homeName.toLowerCase(Locale.ENGLISH), getNewExceptionFuture(user.getSource(), commandLabel));
         } catch (final NotEnoughArgumentsException e) {
             final User finalPlayer = player;
             final CompletableFuture<Location> message = new CompletableFuture<>();
@@ -76,7 +74,7 @@ public class Commandhome extends EssentialsCommand {
                         final UserTeleportHomeEvent event = new UserTeleportHomeEvent(user, null, bed != null ? bed : finalPlayer.getWorld().getSpawnLocation(), bed != null ? UserTeleportHomeEvent.HomeType.BED : UserTeleportHomeEvent.HomeType.SPAWN);
                         server.getPluginManager().callEvent(event);
                         if (!event.isCancelled()) {
-                            user.getAsyncTeleport().respawn(charge, TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
+                            user.getAsyncTeleport().respawn(TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
                         }
                     } else {
                         showError(user.getBase(), new Exception(tl("noHomeSetPlayer")), commandLabel);
@@ -85,7 +83,7 @@ public class Commandhome extends EssentialsCommand {
                     showError(user.getBase(), new Exception(tl("noHomeSetPlayer")), commandLabel);
                 } else if (homes.size() == 1 && finalPlayer.equals(user)) {
                     try {
-                        goHome(user, finalPlayer, homes.get(0), charge, getNewExceptionFuture(user.getSource(), commandLabel));
+                        goHome(user, finalPlayer, homes.get(0), getNewExceptionFuture(user.getSource(), commandLabel));
                     } catch (final Exception exception) {
                         showError(user.getBase(), exception, commandLabel);
                     }
@@ -107,7 +105,6 @@ public class Commandhome extends EssentialsCommand {
             }
             PaperLib.getBedSpawnLocationAsync(player.getBase(), true).thenAccept(message::complete);
         }
-        throw new NoChargeException();
     }
 
     private String getHomeLimit(final User player) {
@@ -120,7 +117,7 @@ public class Commandhome extends EssentialsCommand {
         return Integer.toString(ess.getSettings().getHomeLimit(player));
     }
 
-    private void goHome(final User user, final User player, final String home, final Trade charge, final CompletableFuture<Boolean> future) throws Exception {
+    private void goHome(final User user, final User player, final String home, final CompletableFuture<Boolean> future) throws Exception {
         if (home.length() < 1) {
             throw new NotEnoughArgumentsException();
         }
@@ -134,7 +131,7 @@ public class Commandhome extends EssentialsCommand {
         final UserTeleportHomeEvent event = new UserTeleportHomeEvent(user, home, loc, UserTeleportHomeEvent.HomeType.HOME);
         user.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
-            user.getAsyncTeleport().teleport(loc, charge, TeleportCause.COMMAND, future);
+            user.getAsyncTeleport().teleport(loc, TeleportCause.COMMAND, future);
             future.thenAccept(success -> {
                 if (success) {
                     user.sendMessage(tl("teleportHome", home));

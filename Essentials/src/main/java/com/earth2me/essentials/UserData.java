@@ -10,7 +10,6 @@ import com.earth2me.essentials.utils.NumberUtil;
 import com.earth2me.essentials.utils.StringUtil;
 import com.google.common.base.Charsets;
 import net.ess3.api.IEssentials;
-import net.ess3.api.MaxMoneyException;
 import net.essentialsx.api.v2.services.mail.MailMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,7 +35,6 @@ public abstract class UserData extends PlayerExtension implements IConf {
     protected final transient IEssentials ess;
     private final EssentialsUserConfiguration config;
     private UserConfigHolder holder;
-    private BigDecimal money;
 
     protected UserData(final Player base, final IEssentials ess) {
         super(base);
@@ -86,53 +83,6 @@ public abstract class UserData extends PlayerExtension implements IConf {
             ess.getLogger().log(Level.SEVERE, "Error while reading user config: " + config.getFile().getName(), e);
             throw new RuntimeException(e);
         }
-        money = _getMoney();
-    }
-
-    private BigDecimal _getMoney() {
-        BigDecimal result = ess.getSettings().getStartingBalance();
-        final BigDecimal maxMoney = ess.getSettings().getMaxMoney();
-        final BigDecimal minMoney = ess.getSettings().getMinMoney();
-
-        // NPC banks are not actual player banks, as such they do not have player starting balance.
-        if (isNPC()) {
-            result = BigDecimal.ZERO;
-        }
-
-        if (holder.money() != null) {
-            result = holder.money();
-        }
-        if (result.compareTo(maxMoney) > 0) {
-            result = maxMoney;
-        }
-        if (result.compareTo(minMoney) < 0) {
-            result = minMoney;
-        }
-        holder.money(result);
-
-        return holder.money();
-    }
-
-    public BigDecimal getMoney() {
-        return money;
-    }
-
-    public void setMoney(final BigDecimal value, final boolean throwError) throws MaxMoneyException {
-        final BigDecimal maxMoney = ess.getSettings().getMaxMoney();
-        final BigDecimal minMoney = ess.getSettings().getMinMoney();
-        if (value.compareTo(maxMoney) > 0) {
-            if (throwError) {
-                throw new MaxMoneyException();
-            }
-            money = maxMoney;
-        } else {
-            money = value;
-        }
-        if (money.compareTo(minMoney) < 0) {
-            money = minMoney;
-        }
-        holder.money(money);
-        stopTransaction();
     }
 
     private String getHomeName(String search) {
@@ -681,24 +631,6 @@ public abstract class UserData extends PlayerExtension implements IConf {
         return false;
     }
 
-    public boolean isAcceptingPay() {
-        return holder.acceptingPay();
-    }
-
-    public void setAcceptingPay(final boolean acceptingPay) {
-        holder.acceptingPay(acceptingPay);
-        save();
-    }
-
-    public boolean isPromptingPayConfirm() {
-        return holder.confirmPay() != null ? holder.confirmPay() : ess.getSettings().isConfirmCommandEnabledByDefault("pay");
-    }
-
-    public void setPromptingPayConfirm(final boolean prompt) {
-        holder.confirmPay(prompt);
-        save();
-    }
-
     public boolean isPromptingClearConfirm() {
         return holder.confirmClear() != null ? holder.confirmClear() : ess.getSettings().isConfirmCommandEnabledByDefault("clearinventory");
     }
@@ -715,15 +647,6 @@ public abstract class UserData extends PlayerExtension implements IConf {
     public void setLastMessageReplyRecipient(final boolean enabled) {
         holder.lastMessageReplyRecipient(enabled);
         save();
-    }
-
-    public boolean isBaltopExcludeCache() {
-        return holder.baltopExempt();
-    }
-
-    public void setBaltopExemptCache(boolean baltopExempt) {
-        holder.baltopExempt(baltopExempt);
-        config.save();
     }
 
     public List<String> getPastUsernames() {

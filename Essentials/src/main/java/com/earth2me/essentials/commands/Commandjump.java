@@ -1,6 +1,5 @@
 package com.earth2me.essentials.commands;
 
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.LocationUtil;
 import com.google.common.collect.Lists;
@@ -44,11 +43,7 @@ public class Commandjump extends EssentialsCommand {
             throw new Exception(tl("jumpError"), ex);
         }
 
-        final Trade charge = new Trade(this.getName(), ess);
-        charge.isAffordableFor(user);
-        user.getAsyncTeleport().teleport(loc, charge, TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
-
-        throw new NoChargeException();
+        user.getAsyncTeleport().teleport(loc, TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
     }
 
     @Override

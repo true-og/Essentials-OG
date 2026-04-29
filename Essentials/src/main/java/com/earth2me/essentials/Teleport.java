@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -43,20 +42,15 @@ public class Teleport implements ITeleport {
     public void cooldown(final boolean check) throws Exception {
         final Calendar time = new GregorianCalendar();
         if (teleportOwner.getLastTeleportTimestamp() > 0) {
-            // Take the current time, and remove the delay from it.
             final double cooldown = ess.getSettings().getTeleportCooldown();
             final Calendar earliestTime = new GregorianCalendar();
             earliestTime.add(Calendar.SECOND, -(int) cooldown);
             earliestTime.add(Calendar.MILLISECOND, -(int) ((cooldown * 1000.0) % 1000.0));
-            // This value contains the most recent time a teleportPlayer could have been used that would allow another use.
             final long earliestLong = earliestTime.getTimeInMillis();
 
-            // When was the last teleportPlayer used?
             final long lastTime = teleportOwner.getLastTeleportTimestamp();
 
             if (lastTime > time.getTimeInMillis()) {
-                // This is to make sure time didn't get messed up on last teleportPlayer use.
-                // If this happens, let's give the user the benifit of the doubt.
                 teleportOwner.setLastTeleportTimestamp(time.getTimeInMillis());
                 return;
             } else if (lastTime > earliestLong
@@ -67,7 +61,6 @@ public class Teleport implements ITeleport {
                 throw new Exception(tl("timeBeforeTeleport", DateUtil.formatDateDiff(time.getTimeInMillis())));
             }
         }
-        // if justCheck is set, don't update lastTeleport; we're just checking
         if (!check) {
             teleportOwner.setLastTeleportTimestamp(time.getTimeInMillis());
         }
@@ -101,7 +94,6 @@ public class Teleport implements ITeleport {
         user.sendMessage(tl("dontMoveMessage", DateUtil.formatDateDiff(c.getTimeInMillis())));
     }
 
-    //The now function is used when you want to skip tp delay when teleporting someone to a location or player.
     @Override
     @Deprecated
     public void now(final Location loc, final boolean cooldown, final TeleportCause cause) throws Exception {
@@ -167,48 +159,43 @@ public class Teleport implements ITeleport {
         }
     }
 
-    //The teleportPlayer function is used when you want to normally teleportPlayer someone to a location or player.
-    //This method is nolonger used internally and will be removed.
     @Deprecated
     @Override
-    public void teleport(final Location loc, final Trade chargeFor) throws Exception {
-        teleport(loc, chargeFor, TeleportCause.PLUGIN);
+    public void teleport(final Location loc) throws Exception {
+        teleport(loc, TeleportCause.PLUGIN);
     }
 
     @Override
     @Deprecated
-    public void teleport(final Location loc, final Trade chargeFor, final TeleportCause cause) throws Exception {
-        teleport(teleportOwner, new LocationTarget(loc), chargeFor, cause);
+    public void teleport(final Location loc, final TeleportCause cause) throws Exception {
+        teleport(teleportOwner, new LocationTarget(loc), cause);
     }
 
-    //This is used when teleporting to a player
     @Override
     @Deprecated
-    public void teleport(final Player entity, final Trade chargeFor, final TeleportCause cause) throws Exception {
+    public void teleport(final Player entity, final TeleportCause cause) throws Exception {
         final ITarget target = new PlayerTarget(entity);
         teleportOwner.sendMessage(tl("teleportToPlayer", entity.getDisplayName()));
-        teleport(teleportOwner, target, chargeFor, cause);
+        teleport(teleportOwner, target, cause);
     }
 
-    //This is used when teleporting to stored location
     @Override
     @Deprecated
-    public void teleportPlayer(final IUser teleportee, final Location loc, final Trade chargeFor, final TeleportCause cause) throws Exception {
-        teleport(teleportee, new LocationTarget(loc), chargeFor, cause);
+    public void teleportPlayer(final IUser teleportee, final Location loc, final TeleportCause cause) throws Exception {
+        teleport(teleportee, new LocationTarget(loc), cause);
     }
 
-    //This is used on /tphere
     @Override
     @Deprecated
-    public void teleportPlayer(final IUser teleportee, final Player entity, final Trade chargeFor, final TeleportCause cause) throws Exception {
+    public void teleportPlayer(final IUser teleportee, final Player entity, final TeleportCause cause) throws Exception {
         final ITarget target = new PlayerTarget(entity);
-        teleport(teleportee, target, chargeFor, cause);
+        teleport(teleportee, target, cause);
         teleportee.sendMessage(tl("teleporting", target.getLocation().getWorld().getName(), target.getLocation().getBlockX(), target.getLocation().getBlockY(), target.getLocation().getBlockZ()));
         teleportOwner.sendMessage(tl("teleporting", target.getLocation().getWorld().getName(), target.getLocation().getBlockX(), target.getLocation().getBlockY(), target.getLocation().getBlockZ()));
     }
 
     @Deprecated
-    private void teleport(final IUser teleportee, final ITarget target, final Trade chargeFor, final TeleportCause cause) throws Exception {
+    private void teleport(final IUser teleportee, final ITarget target, final TeleportCause cause) throws Exception {
         double delay = ess.getSettings().getTeleportDelay();
 
         final TeleportWarmupEvent event = new TeleportWarmupEvent(teleportee, cause, target, delay);
@@ -218,35 +205,20 @@ public class Teleport implements ITeleport {
         }
         delay = event.getDelay();
 
-        Trade cashCharge = chargeFor;
-
-        if (chargeFor != null) {
-            chargeFor.isAffordableFor(teleportOwner);
-
-            //This code is to make sure that commandcosts are checked in the initial world, and not in the resulting world.
-            if (!chargeFor.getCommandCost(teleportOwner).equals(BigDecimal.ZERO)) {
-                //By converting a command cost to a regular cost, the command cost permission isn't checked when executing the charge after teleport.
-                cashCharge = new Trade(chargeFor.getCommandCost(teleportOwner), ess);
-            }
-        }
-
         cooldown(true);
         if (delay <= 0 || teleportOwner.isAuthorized("essentials.teleport.timer.bypass") || teleportee.isAuthorized("essentials.teleport.timer.bypass")) {
             cooldown(false);
             now(teleportee, target, cause);
-            if (cashCharge != null) {
-                cashCharge.charge(teleportOwner);
-            }
             return;
         }
 
         cancel(false);
         warnUser(teleportee, delay);
-        initTimer((long) (delay * 1000.0), teleportee, target, cashCharge, cause, false);
+        initTimer((long) (delay * 1000.0), teleportee, target, cause, false);
     }
 
     @Deprecated
-    private void teleportOther(final IUser teleporter, final IUser teleportee, final ITarget target, final Trade chargeFor, final TeleportCause cause) throws Exception {
+    private void teleportOther(final IUser teleporter, final IUser teleportee, final ITarget target, final TeleportCause cause) throws Exception {
         double delay = ess.getSettings().getTeleportDelay();
 
         final TeleportWarmupEvent event = new TeleportWarmupEvent(teleporter, teleportee, cause, target, delay);
@@ -256,18 +228,6 @@ public class Teleport implements ITeleport {
         }
         delay = event.getDelay();
 
-        Trade cashCharge = chargeFor;
-
-        if (teleporter != null && chargeFor != null) {
-            chargeFor.isAffordableFor(teleporter);
-
-            //This code is to make sure that commandcosts are checked in the initial world, and not in the resulting world.
-            if (!chargeFor.getCommandCost(teleporter).equals(BigDecimal.ZERO)) {
-                //By converting a command cost to a regular cost, the command cost permission isn't checked when executing the charge after teleport.
-                cashCharge = new Trade(chargeFor.getCommandCost(teleporter), ess);
-            }
-        }
-
         cooldown(true);
         if (delay <= 0 || teleporter == null
             || teleporter.isAuthorized("essentials.teleport.timer.bypass")
@@ -275,21 +235,17 @@ public class Teleport implements ITeleport {
             || teleportee.isAuthorized("essentials.teleport.timer.bypass")) {
             cooldown(false);
             now(teleportee, target, cause);
-            if (teleporter != null && cashCharge != null) {
-                cashCharge.charge(teleporter);
-            }
             return;
         }
 
         cancel(false);
         warnUser(teleportee, delay);
-        initTimer((long) (delay * 1000.0), teleportee, target, cashCharge, cause, false);
+        initTimer((long) (delay * 1000.0), teleportee, target, cause, false);
     }
 
-    //The respawn function is a wrapper used to handle tp fallback, on /jail and /home
     @Override
     @Deprecated
-    public void respawn(final Trade chargeFor, final TeleportCause cause) throws Exception {
+    public void respawn(final TeleportCause cause) throws Exception {
         double delay = ess.getSettings().getTeleportDelay();
 
         final TeleportWarmupEvent event = new TeleportWarmupEvent(teleportOwner, cause, null, delay);
@@ -299,22 +255,16 @@ public class Teleport implements ITeleport {
         }
         delay = event.getDelay();
 
-        if (chargeFor != null) {
-            chargeFor.isAffordableFor(teleportOwner);
-        }
         cooldown(true);
         if (delay <= 0 || teleportOwner.isAuthorized("essentials.teleport.timer.bypass")) {
             cooldown(false);
             respawnNow(teleportOwner, cause);
-            if (chargeFor != null) {
-                chargeFor.charge(teleportOwner);
-            }
             return;
         }
 
         cancel(false);
         warnUser(teleportOwner, delay);
-        initTimer((long) (delay * 1000.0), teleportOwner, null, chargeFor, cause, true);
+        initTimer((long) (delay * 1000.0), teleportOwner, null, cause, true);
     }
 
     @Deprecated
@@ -333,11 +283,10 @@ public class Teleport implements ITeleport {
         }
     }
 
-    //The warp function is a wrapper used to teleportPlayer a player to a /warp
     @Override
     @Deprecated
-    public void warp(final IUser teleportee, String warp, final Trade chargeFor, final TeleportCause cause) throws Exception {
-        final UserWarpEvent event = new UserWarpEvent(teleportee, warp, chargeFor);
+    public void warp(final IUser teleportee, String warp, final TeleportCause cause) throws Exception {
+        final UserWarpEvent event = new UserWarpEvent(teleportee, warp);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
@@ -349,31 +298,22 @@ public class Teleport implements ITeleport {
         if (!teleportee.equals(teleportOwner)) {
             teleportOwner.sendMessage(tl("warpingTo", warp, loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
         }
-        teleport(teleportee, new LocationTarget(loc), chargeFor, cause);
+        teleport(teleportee, new LocationTarget(loc), cause);
     }
 
-    //The back function is a wrapper used to teleportPlayer a player /back to their previous location.
-    @Override
-    @Deprecated
-    public void back(final Trade chargeFor) throws Exception {
-        back(teleportOwner, chargeFor);
-    }
-
-    //This function is a wrapper over the other back function for cases where another player performs back for them
-    @Override
-    @Deprecated
-    public void back(final IUser teleporter, final Trade chargeFor) throws Exception {
-        tpType = TeleportType.BACK;
-        final Location loc = teleportOwner.getLastLocation();
-        teleportOwner.sendMessage(tl("backUsageMsg", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
-        teleportOther(teleporter, teleportOwner, new LocationTarget(loc), chargeFor, TeleportCause.COMMAND);
-    }
-
-    //This function is used to throw a user back after a jail sentence
     @Override
     @Deprecated
     public void back() throws Exception {
         now(teleportOwner, new LocationTarget(teleportOwner.getLastLocation()), TeleportCause.COMMAND);
+    }
+
+    @Override
+    @Deprecated
+    public void back(final IUser teleporter) throws Exception {
+        tpType = TeleportType.BACK;
+        final Location loc = teleportOwner.getLastLocation();
+        teleportOwner.sendMessage(tl("backUsageMsg", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+        teleportOther(teleporter, teleportOwner, new LocationTarget(loc), TeleportCause.COMMAND);
     }
 
     @Deprecated
@@ -381,7 +321,6 @@ public class Teleport implements ITeleport {
         this.tpType = tpType;
     }
 
-    //If we need to cancelTimer a pending teleportPlayer call this method
     @Deprecated
     private void cancel(final boolean notifyUser) {
         if (timedTeleport != null) {
@@ -391,8 +330,8 @@ public class Teleport implements ITeleport {
     }
 
     @Deprecated
-    private void initTimer(final long delay, final IUser teleportUser, final ITarget target, final Trade chargeFor, final TeleportCause cause, final boolean respawn) {
-        timedTeleport = new TimedTeleport(teleportOwner, ess, this, delay, teleportUser, target, chargeFor, cause, respawn);
+    private void initTimer(final long delay, final IUser teleportUser, final ITarget target, final TeleportCause cause, final boolean respawn) {
+        timedTeleport = new TimedTeleport(teleportOwner, ess, this, delay, teleportUser, target, cause, respawn);
     }
 
     public enum TeleportType {

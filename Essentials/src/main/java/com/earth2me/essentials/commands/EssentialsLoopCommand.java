@@ -1,11 +1,9 @@
 package com.earth2me.essentials.commands;
 
-import com.earth2me.essentials.ChargeException;
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.StringUtil;
-import net.ess3.api.MaxMoneyException;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -18,11 +16,11 @@ public abstract class EssentialsLoopCommand extends EssentialsCommand {
         super(command);
     }
 
-    protected void loopOfflinePlayers(final Server server, final CommandSource sender, final boolean multipleStringMatches, final boolean matchWildcards, final String searchTerm, final String[] commandArgs) throws PlayerNotFoundException, NotEnoughArgumentsException, PlayerExemptException, ChargeException, MaxMoneyException {
+    protected void loopOfflinePlayers(final Server server, final CommandSource sender, final boolean multipleStringMatches, final boolean matchWildcards, final String searchTerm, final String[] commandArgs) throws PlayerNotFoundException, NotEnoughArgumentsException, PlayerExemptException {
         loopOfflinePlayersConsumer(server, sender, multipleStringMatches, matchWildcards, searchTerm, user -> updatePlayer(server, sender, user, commandArgs));
     }
 
-    protected void loopOfflinePlayersConsumer(final Server server, final CommandSource sender, final boolean multipleStringMatches, final boolean matchWildcards, final String searchTerm, final UserConsumer userConsumer) throws PlayerNotFoundException, NotEnoughArgumentsException, PlayerExemptException, ChargeException, MaxMoneyException {
+    protected void loopOfflinePlayersConsumer(final Server server, final CommandSource sender, final boolean multipleStringMatches, final boolean matchWildcards, final String searchTerm, final UserConsumer userConsumer) throws PlayerNotFoundException, NotEnoughArgumentsException, PlayerExemptException {
         if (searchTerm.isEmpty()) {
             throw new PlayerNotFoundException();
         }
@@ -67,11 +65,11 @@ public abstract class EssentialsLoopCommand extends EssentialsCommand {
         }
     }
 
-    protected void loopOnlinePlayers(final Server server, final CommandSource sender, final boolean multipleStringMatches, final boolean matchWildcards, final String searchTerm, final String[] commandArgs) throws PlayerNotFoundException, NotEnoughArgumentsException, PlayerExemptException, ChargeException, MaxMoneyException {
+    protected void loopOnlinePlayers(final Server server, final CommandSource sender, final boolean multipleStringMatches, final boolean matchWildcards, final String searchTerm, final String[] commandArgs) throws PlayerNotFoundException, NotEnoughArgumentsException, PlayerExemptException {
         loopOnlinePlayersConsumer(server, sender, multipleStringMatches, matchWildcards, searchTerm, user -> updatePlayer(server, sender, user, commandArgs));
     }
 
-    protected void loopOnlinePlayersConsumer(final Server server, final CommandSource sender, final boolean multipleStringMatches, final boolean matchWildcards, final String searchTerm, final UserConsumer userConsumer) throws PlayerNotFoundException, NotEnoughArgumentsException, PlayerExemptException, ChargeException, MaxMoneyException {
+    protected void loopOnlinePlayersConsumer(final Server server, final CommandSource sender, final boolean multipleStringMatches, final boolean matchWildcards, final String searchTerm, final UserConsumer userConsumer) throws PlayerNotFoundException, NotEnoughArgumentsException, PlayerExemptException {
         if (searchTerm.isEmpty()) {
             throw new PlayerNotFoundException();
         }
@@ -121,7 +119,7 @@ public abstract class EssentialsLoopCommand extends EssentialsCommand {
         }
     }
 
-    protected abstract void updatePlayer(Server server, CommandSource sender, User user, String[] args) throws NotEnoughArgumentsException, PlayerExemptException, ChargeException, MaxMoneyException;
+    protected abstract void updatePlayer(Server server, CommandSource sender, User user, String[] args) throws NotEnoughArgumentsException, PlayerExemptException;
 
     @Override
     protected List<String> getPlayers(final Server server, final CommandSource interactor) {
@@ -140,6 +138,6 @@ public abstract class EssentialsLoopCommand extends EssentialsCommand {
     }
 
     public interface UserConsumer {
-        void accept(User user) throws PlayerNotFoundException, NotEnoughArgumentsException, PlayerExemptException, ChargeException, MaxMoneyException;
+        void accept(User user) throws PlayerNotFoundException, NotEnoughArgumentsException, PlayerExemptException;
     }
 }

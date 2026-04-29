@@ -13,6 +13,8 @@ Clone this repository, then run the following command:
 
 ## Changes over EssentialsX
 
+- Removed Essentials economy and removed vault support.
+
 - Added option to stop cancelling teleports during damage events.
 
 - Removed log4j.

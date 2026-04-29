@@ -1,7 +1,6 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.Mob;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.EnumUtil;
 import com.earth2me.essentials.utils.LocationUtil;
@@ -55,8 +54,6 @@ public class Commandspawner extends EssentialsCommand {
         if (args.length > 1 && NumberUtil.isInt(args[1]) && user.isAuthorized("essentials.spawner.delay")) {
             delay = Integer.parseInt(args[1]);
         }
-        final Trade charge = new Trade("spawner-" + mob.name.toLowerCase(Locale.ENGLISH), ess);
-        charge.isAffordableFor(user);
         try {
             final CreatureSpawner spawner = (CreatureSpawner) target.getBlock().getState();
             spawner.setSpawnedType(mob.getType());
@@ -72,7 +69,6 @@ public class Commandspawner extends EssentialsCommand {
         } catch (final Throwable ex) {
             throw new Exception(tl("mobSpawnError"), ex);
         }
-        charge.charge(user);
         user.sendMessage(tl("setSpawner", mob.name));
 
     }

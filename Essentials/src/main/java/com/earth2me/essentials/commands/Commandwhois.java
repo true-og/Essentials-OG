@@ -5,7 +5,6 @@ import com.earth2me.essentials.User;
 import com.earth2me.essentials.craftbukkit.SetExpFix;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.EnumUtil;
-import com.earth2me.essentials.utils.NumberUtil;
 import org.bukkit.Server;
 import org.bukkit.Statistic;
 
@@ -42,9 +41,6 @@ public class Commandwhois extends EssentialsCommand {
         sender.sendMessage(tl("whoisLocation", user.getLocation().getWorld().getName(), user.getLocation().getBlockX(), user.getLocation().getBlockY(), user.getLocation().getBlockZ()));
         final long playtimeMs = System.currentTimeMillis() - (user.getBase().getStatistic(PLAY_ONE_TICK) * 50L);
         sender.sendMessage(tl("whoisPlaytime", DateUtil.formatDateDiff(playtimeMs)));
-        if (!ess.getSettings().isEcoDisabled()) {
-            sender.sendMessage(tl("whoisMoney", NumberUtil.displayCurrency(user.getMoney(), ess)));
-        }
         if (!sender.isPlayer() || ess.getUser(sender.getPlayer()).isAuthorized("essentials.whois.ip")) {
             sender.sendMessage(tl("whoisIPAddress", user.getBase().getAddress().getAddress().toString()));
         }

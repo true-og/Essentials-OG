@@ -6,10 +6,7 @@ plugins {
 }
 
 dependencies {
-    compileOnly("com.github.milkbowl:VaultAPI:1.7") {
-        exclude(group = "org.bukkit", module = "bukkit")
-    }
-    compileOnly("net.luckperms:api:5.0")
+    compileOnly("net.luckperms:api:5.5")
     api("io.papermc:paperlib:1.0.6")
     implementation("org.spongepowered:configurate-yaml:4.1.2")
     implementation("org.checkerframework:checker-qual:3.14.0")

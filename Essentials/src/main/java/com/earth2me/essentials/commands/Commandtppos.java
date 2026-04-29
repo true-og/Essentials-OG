@@ -1,7 +1,6 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FloatUtil;
 import com.google.common.collect.Lists;
@@ -51,12 +50,8 @@ public class Commandtppos extends EssentialsCommand {
         if (x > 30000000 || y > 30000000 || z > 30000000 || x < -30000000 || y < -30000000 || z < -30000000) {
             throw new NotEnoughArgumentsException(tl("teleportInvalidLocation"));
         }
-        final Trade charge = new Trade(this.getName(), ess);
-        charge.isAffordableFor(user);
         user.sendMessage(tl("teleporting", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
-        user.getAsyncTeleport().teleport(loc, charge, TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
-
-        throw new NoChargeException();
+        user.getAsyncTeleport().teleport(loc, TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
     }
 
     @Override
@@ -85,7 +80,7 @@ public class Commandtppos extends EssentialsCommand {
         }
         sender.sendMessage(tl("teleporting", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
         user.sendMessage(tl("teleporting", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
-        user.getAsyncTeleport().teleport(loc, null, TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
+        user.getAsyncTeleport().teleport(loc, TeleportCause.COMMAND, getNewExceptionFuture(user.getSource(), commandLabel));
     }
 
     @Override

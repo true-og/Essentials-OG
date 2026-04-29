@@ -1,12 +1,9 @@
 package com.earth2me.essentials.commands;
 
-import com.earth2me.essentials.ChargeException;
-import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.craftbukkit.Inventories;
 import com.earth2me.essentials.utils.MaterialUtil;
 import com.earth2me.essentials.utils.StringUtil;
-import com.earth2me.essentials.utils.VersionUtil;
 import com.google.common.collect.Lists;
 import net.ess3.api.IUser;
 import org.bukkit.Material;
@@ -30,10 +27,7 @@ public class Commandrepair extends EssentialsCommand {
         if (args.length == 0 || args[0].equalsIgnoreCase("hand") || !user.isAuthorized("essentials.repair.all")) {
             repairHand(user);
         } else if (args[0].equalsIgnoreCase("all")) {
-            final Trade charge = new Trade("repair-all", ess);
-            charge.isAffordableFor(user);
             repairAll(user);
-            charge.charge(user);
         } else {
             throw new NotEnoughArgumentsException();
         }
@@ -50,13 +44,9 @@ public class Commandrepair extends EssentialsCommand {
         }
 
         final String itemName = item.getType().toString().toLowerCase(Locale.ENGLISH);
-        final Trade charge = getCharge(item.getType());
-
-        charge.isAffordableFor(user);
 
         repairItem(item);
 
-        charge.charge(user);
         user.getBase().updateInventory();
         user.sendMessage(tl("repair", itemName.replace('_', ' ')));
     }
@@ -97,14 +87,7 @@ public class Commandrepair extends EssentialsCommand {
             }
 
             final String itemName = item.getType().toString().toLowerCase(Locale.ENGLISH);
-            final Trade charge = getCharge(item.getType());
 
-            try {
-                charge.isAffordableFor(user);
-            } catch (final ChargeException ex) {
-                user.sendMessage(ex.getMessage());
-                continue;
-            }
             if (!item.getEnchantments().isEmpty() && !ess.getSettings().getRepairEnchanted() && !user.isAuthorized("essentials.repair.enchanted")) {
                 continue;
             }
@@ -114,22 +97,7 @@ public class Commandrepair extends EssentialsCommand {
             } catch (final Exception e) {
                 continue;
             }
-            try {
-                charge.charge(user);
-            } catch (final ChargeException ex) {
-                user.sendMessage(ex.getMessage());
-            }
             repaired.add(itemName.replace('_', ' '));
-        }
-    }
-
-    private Trade getCharge(final Material material) {
-        final String itemName = material.toString().toLowerCase(Locale.ENGLISH);
-        if (VersionUtil.PRE_FLATTENING) {
-            final int itemId = material.getId();
-            return new Trade("repair-" + itemName.replace('_', '-'), new Trade("repair-" + itemId, new Trade("repair-item", ess), ess), ess);
-        } else {
-            return new Trade("repair-" + itemName.replace('_', '-'), new Trade("repair-item", ess), ess);
         }
     }
 

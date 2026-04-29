@@ -46,8 +46,6 @@ import java.util.regex.PatternSyntaxException;
 import static com.earth2me.essentials.I18n.tl;
 
 public class Settings implements net.ess3.api.ISettings {
-    private static final BigDecimal DEFAULT_MAX_MONEY = new BigDecimal("10000000000000");
-    private static final BigDecimal DEFAULT_MIN_MONEY = new BigDecimal("-10000000000000");
     private final transient EssentialsConfiguration config;
     private final transient IEssentials ess;
     private final transient AtomicInteger reloadCount = new AtomicInteger(0);
@@ -63,7 +61,6 @@ public class Settings implements net.ess3.api.ISettings {
     private List<String> overriddenCommands = Collections.emptyList();
     private List<String> playerCommands = Collections.emptyList();
     private final transient Map<String, Command> disabledBukkitCommands = new HashMap<>();
-    private Map<String, BigDecimal> commandCosts;
     private Set<String> socialSpyCommands = new HashSet<>();
     private Set<String> muteCommands = new HashSet<>();
     private String nicknamePrefix = "~";
@@ -74,13 +71,6 @@ public class Settings implements net.ess3.api.ISettings {
     private boolean warnOnBuildDisallow;
     private boolean debug = false;
     private boolean configDebug = false;
-    // #easteregg
-    private boolean economyDisabled = false;
-    private BigDecimal maxMoney = DEFAULT_MAX_MONEY;
-    private BigDecimal minMoney = DEFAULT_MIN_MONEY;
-    private boolean economyLog = false;
-    // #easteregg
-    private boolean economyLogUpdate = false;
     private boolean changeDisplayName = true;
     private boolean changePlayerListName = false;
     private boolean prefixsuffixconfigured = false;
@@ -108,8 +98,6 @@ public class Settings implements net.ess3.api.ISettings {
     private int signUsePerSecond;
     private int mailsPerMinute;
     // #easteregg
-    private long economyLagWarning;
-    // #easteregg
     private long permissionsLagWarning;
     private boolean allowSilentJoin;
     private String customJoinMessage;
@@ -120,8 +108,6 @@ public class Settings implements net.ess3.api.ISettings {
     private boolean isCustomNewUsernameMessage;
     private List<String> spawnOnJoinGroups;
     private Map<Pattern, Long> commandCooldowns;
-    private boolean npcsInBalanceRanking = false;
-    private NumberFormat currencyFormat;
     private List<EssentialsSign> unprotectedSigns = Collections.emptyList();
     private List<String> defaultEnabledConfirmCommands;
     private TeleportWhenFreePolicy teleportWhenFreePolicy;
@@ -288,11 +274,6 @@ public class Settings implements net.ess3.api.ISettings {
     }
 
     @Override
-    public BigDecimal getStartingBalance() {
-        return config.getBigDecimal("starting-balance", BigDecimal.ZERO);
-    }
-
-    @Override
     public boolean isCommandDisabled(final IEssentialsCommand cmd) {
         return isCommandDisabled(cmd.getName());
     }
@@ -370,52 +351,6 @@ public class Settings implements net.ess3.api.ISettings {
             return true;
         }
         return config.getBoolean("override-" + name.toLowerCase(Locale.ENGLISH), false);
-    }
-
-    @Override
-    public BigDecimal getCommandCost(final IEssentialsCommand cmd) {
-        return getCommandCost(cmd.getName());
-    }
-
-    private Map<String, BigDecimal> _getCommandCosts() {
-        final Map<String, CommentedConfigurationNode> section = ConfigurateUtil.getMap(config.getSection("command-costs"));
-        if (!section.isEmpty()) {
-            final Map<String, BigDecimal> newMap = new HashMap<>();
-            for (Map.Entry<String, CommentedConfigurationNode> entry : section.entrySet()) {
-                final String command = entry.getKey();
-                final CommentedConfigurationNode node = entry.getValue();
-                if (command.charAt(0) == '/') {
-                    ess.getLogger().warning("Invalid command cost. '" + command + "' should not start with '/'.");
-                }
-                try {
-                    if (ConfigurateUtil.isDouble(node)) {
-                        newMap.put(command.toLowerCase(Locale.ENGLISH), BigDecimal.valueOf(node.getDouble()));
-                    } else if (ConfigurateUtil.isInt(node)) {
-                        newMap.put(command.toLowerCase(Locale.ENGLISH), BigDecimal.valueOf(node.getInt()));
-                    } else if (ConfigurateUtil.isString(node)) {
-                        final String costString = node.getString();
-                        //noinspection ConstantConditions
-                        final double cost = Double.parseDouble(costString.trim().replace("$", "").replace(getCurrencySymbol(), "").replaceAll("\\W", ""));
-                        newMap.put(command.toLowerCase(Locale.ENGLISH), BigDecimal.valueOf(cost));
-                    } else {
-                        ess.getLogger().warning("Invalid command cost for: " + command);
-                    }
-                } catch (final Exception ex) {
-                    ess.getLogger().warning("Invalid command cost for: " + command);
-                }
-            }
-            return newMap;
-        }
-        return null;
-    }
-
-    @Override
-    public BigDecimal getCommandCost(String name) {
-        name = name.replace('.', '_').replace('/', '_');
-        if (commandCosts != null && commandCosts.containsKey(name)) {
-            return commandCosts.get(name);
-        }
-        return BigDecimal.ZERO;
     }
 
     private Set<String> _getSocialSpyCommands() {
@@ -739,17 +674,10 @@ public class Settings implements net.ess3.api.ISettings {
         chatRadius = _getChatRadius();
         chatShout = _getChatShout();
         chatQuestion = _getChatQuestion();
-        commandCosts = _getCommandCosts();
         socialSpyCommands = _getSocialSpyCommands();
         warnOnBuildDisallow = _warnOnBuildDisallow();
         mailsPerMinute = _getMailsPerMinute();
-        maxMoney = _getMaxMoney();
-        minMoney = _getMinMoney();
         permissionsLagWarning = _getPermissionsLagWarning();
-        economyLagWarning = _getEconomyLagWarning();
-        economyLog = _isEcoLogEnabled();
-        economyLogUpdate = _isEcoLogUpdateEnabled();
-        economyDisabled = _isEcoDisabled();
         allowSilentJoin = _allowSilentJoinQuit();
         customJoinMessage = _getCustomJoinMessage();
         isCustomJoinMessage = !customJoinMessage.equals("none");
@@ -760,8 +688,6 @@ public class Settings implements net.ess3.api.ISettings {
         muteCommands = _getMuteCommands();
         spawnOnJoinGroups = _getSpawnOnJoinGroups();
         commandCooldowns = _getCommandCooldowns();
-        npcsInBalanceRanking = _isNpcsInBalanceRanking();
-        currencyFormat = _getCurrencyFormat();
         unprotectedSigns = _getUnprotectedSign();
         defaultEnabledConfirmCommands = _getDefaultEnabledConfirmCommands();
         teleportWhenFreePolicy = _getTeleportWhenFreePolicy();
@@ -777,7 +703,6 @@ public class Settings implements net.ess3.api.ISettings {
         removeEffectsOnHeal = _isRemovingEffectsOnHeal();
         vanishingItemPolicy = _getVanishingItemsPolicy();
         bindingItemPolicy = _getBindingItemsPolicy();
-        currencySymbol = _getCurrencySymbol();
         worldAliases = _getWorldAliases();
 
         reloadCount.incrementAndGet();
@@ -883,27 +808,6 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getString("locale", "");
     }
 
-    private String currencySymbol = "$";
-
-    // A valid currency symbol value must be one non-integer character.
-    private String _getCurrencySymbol() {
-        String value = config.getString("currency-symbol", "$").trim();
-        if (value.length() > 1 || value.matches("\\d")) {
-            value = "$";
-        }
-        return value;
-    }
-
-    @Override
-    public String getCurrencySymbol() {
-        return currencySymbol;
-    }
-
-    @Override
-    public boolean isCurrencySymbolSuffixed() {
-        return config.getBoolean("currency-symbol-suffix", false);
-    }
-
     // #easteregg
     @Override
     @Deprecated
@@ -915,15 +819,6 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean isTradeInStacks(final Material type) {
         return config.getBoolean("trade-in-stacks." + type.toString().toLowerCase().replace("_", ""), false);
-    }
-
-    public boolean _isEcoDisabled() {
-        return config.getBoolean("disable-eco", false);
-    }
-
-    @Override
-    public boolean isEcoDisabled() {
-        return economyDisabled;
     }
 
     @Override
@@ -969,49 +864,9 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBoolean(configName, def);
     }
 
-    private BigDecimal _getMaxMoney() {
-        return config.getBigDecimal("max-money", DEFAULT_MAX_MONEY);
-    }
-
-    @Override
-    public BigDecimal getMaxMoney() {
-        return maxMoney;
-    }
-
-    private BigDecimal _getMinMoney() {
-        BigDecimal min = config.getBigDecimal("min-money", DEFAULT_MIN_MONEY);
-        if (min.signum() > 0) {
-            min = min.negate();
-        }
-        return min;
-    }
-
-    @Override
-    public BigDecimal getMinMoney() {
-        return minMoney;
-    }
-
-    @Override
-    public boolean isEcoLogEnabled() {
-        return economyLog;
-    }
-
-    public boolean _isEcoLogEnabled() {
-        return config.getBoolean("economy-log-enabled", false);
-    }
-
-    @Override
-    public boolean isEcoLogUpdateEnabled() {
-        return economyLogUpdate;
-    }
-
     @Override
     public boolean realNamesOnList() {
         return config.getBoolean("real-names-on-list", false);
-    }
-
-    public boolean _isEcoLogUpdateEnabled() {
-        return config.getBoolean("economy-log-update-enabled", false);
     }
 
     @Override
@@ -1340,16 +1195,6 @@ public class Settings implements net.ess3.api.ISettings {
         return mailsPerMinute;
     }
 
-    private long _getEconomyLagWarning() {
-        // Default to 25ms
-        return (long) (config.getDouble("economy-lag-warning", 25.0) * 1000000);
-    }
-
-    @Override
-    public long getEconomyLagWarning() {
-        return economyLagWarning;
-    }
-
     private long _getPermissionsLagWarning() {
         // Default to 25ms
         return (long) (config.getDouble("permissions-lag-warning", 25.0) * 1000000);
@@ -1472,16 +1317,6 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean isLastMessageReplyRecipient() {
         return config.getBoolean("last-message-reply-recipient", false);
-    }
-
-    @Override
-    public BigDecimal getMinimumPayAmount() {
-        return new BigDecimal(config.getString("minimum-pay-amount", "0.001"));
-    }
-
-    @Override
-    public boolean isPayExcludesIgnoreList() {
-        return config.getBoolean("pay-excludes-ignore-list", false);
     }
 
     @Override
@@ -1632,40 +1467,6 @@ public class Settings implements net.ess3.api.ISettings {
     public boolean isCommandCooldownPersistent(final String label) {
         // TODO: enable per command cooldown specification for persistence.
         return config.getBoolean("command-cooldown-persistence", true);
-    }
-
-    private boolean _isNpcsInBalanceRanking() {
-        return config.getBoolean("npcs-in-balance-ranking", false);
-    }
-
-    @Override
-    public boolean isNpcsInBalanceRanking() {
-        return npcsInBalanceRanking;
-    }
-
-    private NumberFormat _getCurrencyFormat() {
-        final String currencyFormatString = config.getString("currency-format", "#,##0.00");
-
-        final String symbolLocaleString = config.getString("currency-symbol-format-locale", null);
-        final DecimalFormatSymbols decimalFormatSymbols;
-        if (symbolLocaleString != null) {
-            decimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.forLanguageTag(symbolLocaleString));
-        } else {
-            // Fallback to the JVM's default locale
-            decimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.US);
-        }
-
-        final DecimalFormat currencyFormat = new DecimalFormat(currencyFormatString, decimalFormatSymbols);
-        currencyFormat.setRoundingMode(RoundingMode.FLOOR);
-
-        // Updates NumberUtil#PRETTY_FORMAT field so that all of Essentials can follow a single format.
-        NumberUtil.internalSetPrettyFormat(currencyFormat);
-        return currencyFormat;
-    }
-
-    @Override
-    public NumberFormat getCurrencyFormat() {
-        return this.currencyFormat;
     }
 
     @Override
@@ -1922,11 +1723,6 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean isUpdateCheckEnabled() {
         return config.getBoolean("update-check", true);
-    }
-
-    @Override
-    public boolean showZeroBaltop() {
-        return config.getBoolean("show-zero-baltop", true);
     }
 
     @Override
