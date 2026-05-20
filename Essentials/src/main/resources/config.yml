@@ -5,7 +5,7 @@
 ############################################################
 
 # This is the config file for EssentialsX.
-# This config was generated for version @full.version@.
+# This config was generated for version 1.19.4.
 
 # If you want to use special characters in this document, such as accented letters, you MUST save the file as UTF-8, not ANSI.
 # If you receive an error when Essentials loads, ensure that:
@@ -91,7 +91,7 @@ teleport-passenger-dismount: true
 teleport-cooldown: 6
 
 # The delay, in seconds, before a user actually teleports. If the user moves or gets attacked in this timeframe, the teleport is cancelled.
-teleport-delay: 3
+teleport-delay: 5
 
 # Whether to cancel a teleport when damage is taken
 teleport-cancel-on-damage: false
@@ -104,7 +104,7 @@ teleport-invulnerability: 2
 teleport-to-center: true
 
 # The delay, in seconds, required between /heal or /feed attempts.
-heal-cooldown: 2
+heal-cooldown: 1
 
 # Do you want to remove potion effects when healing a player?
 remove-effects-on-heal: false
@@ -136,7 +136,7 @@ item-spawn-blacklist:
 permission-based-item-spawn: false
 
 # Mob limit on the /spawnmob command per execution.
-spawnmob-limit: 20
+spawnmob-limit: 25
 
 # Shall we notify users when using /lightning?
 warn-on-smite: false
@@ -165,7 +165,6 @@ notify-player-of-mail-cooldown: 60
 overridden-commands:
 #  - god
 #  - info
-  - seed
 
 # Disabling commands here will prevent Essentials handling the command, this will not affect command conflicts.
 # You should not have to disable commands used in other plugins, they will automatically get priority.
@@ -185,6 +184,7 @@ disabled-commands:
   - message
   - msg
   - pm
+  - nick
   - r
   - reply
   - shop
@@ -193,7 +193,7 @@ disabled-commands:
   - tp
   - w
   - whisper
-  
+
 # Whether or not Essentials should show detailed command usages.
 # If set to false, Essentials will collapse all usages in to one single usage message.
 verbose-command-usages: true
@@ -227,7 +227,7 @@ socialspy-commands:
 
 # Whether the private and public messages from muted players should appear in the social spy.
 # If so, they will be differentiated from those sent by normal players.
-socialspy-listen-muted-players: true
+socialspy-listen-muted-players: false
 
 # Whether social spy should spy on private messages or just the commands from the list above.
 # If false, social spy will only monitor commands from the list above.
@@ -428,12 +428,12 @@ per-warp-permission: false
 # Detailed instructions and examples can be found on the wiki: http://wiki.ess3.net/wiki/List
 list:
     # To merge groups, list the groups you wish to merge
-    Staff: admin moderator builder developer
+    Staff: moderator developer builder helper
     Admins: admin
     # To limit groups, set a max user limit
     #builder: 20
     # To hide groups, set the group as hidden
-    default: youtube tester og-master og-pro og member
+    default: technical-contributor youtube og-master og-pro og default
     # Uncomment the line below to simply list all players with no grouping
     #Players: '*'
 
@@ -702,7 +702,7 @@ allow-world-in-broadcastworld: true
 # Consider water blocks as "safe," therefore allowing players to teleport
 # using commands such as /home or /spawn to a location that is occupied
 # by water blocks
-is-water-safe: false
+is-water-safe: true
 
 # Should the usermap try to sanitise usernames before saving them?
 # You should only change this to false if you use Minecraft China.
