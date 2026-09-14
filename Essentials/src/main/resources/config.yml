@@ -742,18 +742,19 @@ world-home-permissions: false
 # Allow players to have multiple homes.
 # Players need essentials.sethome.multiple before they can have more than 1 home.
 # You can set the default number of multiple homes using the 'default' rank below.
+# If no 'default' rank is set, players without a matching home-rank are limited to 1 home.
 # To remove the home limit entirely, give people 'essentials.sethome.multiple.unlimited'.
 # To grant different home amounts to different people, you need to define a 'home-rank' below.
 # Create the 'home-rank' below, and give the matching permission: essentials.sethome.multiple.<home-rank>
 # For more information, visit http://wiki.ess3.net/wiki/Multihome
+# Home ranks below match the permissions granted by Quests-OG (essentials.sethome.multiple.homes-N).
+# Players start with 1 home and unlock more by completing home quests.
 sethome-multiple:
-  member: 2
-  og: 3
-  og-pro: 4
-  highest: 6
-
-# In this example someone with 'essentials.sethome.multiple' and 'essentials.sethome.multiple.vip' will have 5 homes.
-# Remember, they MUST have both permission nodes in order to be able to set multiple homes.
+  homes-2: 2
+  homes-3: 3
+  homes-4: 4
+  homes-5: 5
+  homes-6: 6
 
 # Controls whether players need the permission "essentials.home.compass" in order to point
 # the player's compass at their first home.

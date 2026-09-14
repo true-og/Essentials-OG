@@ -175,7 +175,10 @@ public class Settings implements net.ess3.api.ISettings {
 
     @Override
     public int getHomeLimit(final String set) {
-        return config.getInt("sethome-multiple." + set, config.getInt("sethome-multiple.default", 3));
+        // If no 'default' rank is configured, fall back to a single home rather than
+        // upstream's hardcoded 3. Otherwise every player with essentials.sethome.multiple
+        // silently receives a floor of 3 homes regardless of their configured rank limit.
+        return config.getInt("sethome-multiple." + set, config.getInt("sethome-multiple.default", 1));
     }
 
     private int _getChatRadius() {
