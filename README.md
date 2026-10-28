@@ -1,4 +1,4 @@
-[![EssentialsX](https://i.imgur.com/CP4SZpB.png)](https://github.com/true-og/Essentials-OG)
+[![EssentialsX](https://i.imgur.com/CP4SZpB.png)](https://git.trueog.net/trueog/Essentials-OG)
 
 This is a fork of EssentialsX maintained for [TrueOG Network](https://true-og.net).
 
